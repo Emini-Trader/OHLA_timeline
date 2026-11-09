@@ -1,0 +1,534 @@
+<!doctype html>
+<html lang="no">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ressursfordeling – tidslinje</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ==========================================================
+   DESIGN TOKENS – juster her for å matche profilen (norma-gs.no)
+   ========================================================== */
+:root{
+  --brand:#0f2a4a;          /* primær – mørk marineblå */
+  --brand-2:#1b4a7a;
+  --accent:#00a0b0;         /* aksent – petrol/teal */
+  --accent-soft:#e3f5f7;
+  --bg:#f4f6f9;
+  --surface:#ffffff;
+  --text:#1c2733;
+  --muted:#5d6b7a;
+  --line:#dde3ea;
+  --r1:#1b4a7a;             /* Ressurs 1 */
+  --r2:#00a0b0;             /* Ressurs 2 */
+  --r3:#e07a1f;             /* Ressurs 3 */
+  --shared:#8a97a6;         /* felles tjenester */
+  --p1:#f5d90a;             /* periode 1 (gul i regnearket) */
+  --p2:#d99ad9;             /* periode 2 (rosa i regnearket) */
+  --today:#d6223b;
+  --radius:10px;
+  --shadow:0 2px 10px rgba(15,42,74,.08);
+  --font-head:"Montserrat",system-ui,sans-serif;
+  --font-body:"Open Sans",system-ui,sans-serif;
+  --label-w:230px;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0c1520;--surface:#132132;--text:#e6edf4;--muted:#9aabbc;--line:#24364a;
+    --brand:#e6edf4;--brand-2:#7fb2e5;--accent-soft:#0f3640;--r1:#5b9be0;
+    --shadow:0 2px 10px rgba(0,0,0,.35);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0c1520;--surface:#132132;--text:#e6edf4;--muted:#9aabbc;--line:#24364a;
+  --brand:#e6edf4;--brand-2:#7fb2e5;--accent-soft:#0f3640;--r1:#5b9be0;
+  --shadow:0 2px 10px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--text);font:15px/1.55 var(--font-body);-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:var(--font-head);margin:0;letter-spacing:-.01em}
+button{font:inherit;cursor:pointer}
+
+/* Header */
+.topbar{background:#0f2a4a;color:#fff}
+.topbar .in{max-width:1280px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;gap:16px}
+.logo{font-family:var(--font-head);font-weight:800;letter-spacing:.14em;font-size:18px;display:flex;align-items:center;gap:10px}
+.logo i{display:inline-block;width:26px;height:26px;border-radius:50%;border:3px solid var(--accent);position:relative}
+.logo i::after{content:"";position:absolute;inset:6px;border-radius:50%;background:var(--accent)}
+.topbar .sp{flex:1}
+.seg{display:inline-flex;border:1px solid rgba(255,255,255,.35);border-radius:999px;overflow:hidden}
+.seg button{background:transparent;color:#fff;border:0;padding:5px 12px;font-size:13px;font-weight:600}
+.seg button[aria-pressed="true"]{background:var(--accent)}
+.hero{background:linear-gradient(120deg,#0f2a4a 0%,#1b4a7a 70%,#0f6b7a 100%);color:#fff}
+.hero .in{max-width:1280px;margin:0 auto;padding:36px 24px 44px}
+.hero .kicker{font-family:var(--font-head);text-transform:uppercase;letter-spacing:.16em;font-size:12px;color:#9fe3ea;font-weight:700}
+.hero h1{font-size:clamp(26px,4vw,40px);font-weight:800;margin:8px 0 10px}
+.hero p{max-width:760px;margin:0;color:#d4e0ec}
+
+main{max-width:1280px;margin:-24px auto 0;padding:0 24px 60px;position:relative}
+.card{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid var(--line)}
+
+/* KPIs */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:20px}
+.kpi{padding:16px 18px}
+.kpi .l{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600}
+.kpi .v{font-family:var(--font-head);font-size:30px;font-weight:800;color:var(--brand);line-height:1.15;margin-top:4px}
+.kpi .v small{font-size:15px;color:var(--muted);font-weight:600}
+.kpi .s{font-size:13px;color:var(--muted)}
+
+/* Timeline */
+.tl{padding:18px 0 8px}
+.tl-head{display:flex;flex-wrap:wrap;gap:12px;align-items:center;padding:0 20px 14px}
+.tl-head h2{font-size:19px;color:var(--brand);flex:1;min-width:200px}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:13px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend b{width:12px;height:12px;border-radius:3px;display:inline-block}
+.scroll{overflow-x:auto;padding:0 20px 6px}
+.grid{min-width:960px;display:grid;grid-template-columns:var(--label-w) 1fr;position:relative}
+.lab{padding:0 12px 0 0;display:flex;align-items:center;font-size:13.5px;min-height:34px;position:sticky;left:0;background:var(--surface);z-index:3}
+.track{position:relative;min-height:34px;border-left:1px solid var(--line)}
+.lab.row-sep,.track.row-sep{border-top:1px solid var(--line)}
+.track.years,.track.months{display:flex}
+.track.years div,.track.months div{border-right:1px solid var(--line);text-align:center;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden}
+.track.years div{font-family:var(--font-head);font-weight:700;color:var(--brand);font-size:13px;padding:6px 0}
+.track.months div{padding:3px 0}
+.track.periods{min-height:30px}
+.pband{position:absolute;top:4px;bottom:4px;border-radius:6px;font-size:12px;font-weight:700;font-family:var(--font-head);display:flex;align-items:center;padding:0 10px;color:#1c2733;white-space:nowrap;overflow:hidden;cursor:pointer;border:0}
+.pband.p1{background:var(--p1)}
+.pband.p2{background:var(--p2)}
+.pband.open{-webkit-mask-image:linear-gradient(90deg,#000 85%,transparent);mask-image:linear-gradient(90deg,#000 85%,transparent)}
+.lab.group{font-family:var(--font-head);font-weight:700;font-size:13px;color:var(--brand);text-transform:uppercase;letter-spacing:.06em;padding-top:12px;min-height:40px}
+.lab.group .dot{width:10px;height:10px;border-radius:50%;margin-right:8px;flex:none}
+.track.group{border-left-color:transparent}
+.lab.lane{padding-left:18px;color:var(--text)}
+.bar{position:absolute;top:6px;height:22px;border-radius:6px;border:0;padding:0 8px;color:#fff;font-size:12px;font-weight:600;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:transform .12s,box-shadow .12s,opacity .2s;box-shadow:0 1px 2px rgba(0,0,0,.15)}
+.bar:hover,.bar:focus-visible{transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,.2);outline:none}
+.bar.sel{outline:3px solid var(--text);outline-offset:1px}
+.bar.open{-webkit-mask-image:linear-gradient(90deg,#000 88%,rgba(0,0,0,.25));mask-image:linear-gradient(90deg,#000 88%,rgba(0,0,0,.25))}
+.bar.dim{opacity:.28}
+.bar .tag{background:rgba(255,255,255,.25);border-radius:4px;padding:0 5px;margin-left:6px;font-size:10.5px;text-transform:uppercase;letter-spacing:.04em}
+.bar.shared{background:repeating-linear-gradient(135deg,var(--shared) 0 10px,#9ba7b5 10px 20px)}
+.vline{position:absolute;top:0;bottom:0;width:0;border-left:2px dashed var(--muted);pointer-events:none;z-index:2}
+.vline.today{border-left:2px solid var(--today)}
+.vline.today span{position:absolute;top:2px;left:-40px;width:36px;text-align:right;font-size:11px;font-weight:700;color:var(--today);white-space:nowrap}
+.cursor{position:absolute;top:0;bottom:0;width:2px;background:var(--accent);z-index:4;pointer-events:none}
+.cursor::before{content:"";position:absolute;top:-6px;left:-6px;width:14px;height:14px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 3px var(--surface)}
+.overlay{position:absolute;inset:0;pointer-events:none}
+.scrub{display:grid;grid-template-columns:var(--label-w) 1fr;min-width:960px;align-items:center;margin-top:6px}
+.scrub label{font-size:12.5px;font-weight:600;color:var(--muted);position:sticky;left:0;background:var(--surface)}
+input[type=range]{width:100%;accent-color:var(--accent);margin:0}
+.hint{font-size:12.5px;color:var(--muted);padding:6px 20px 8px}
+
+/* Lower area */
+.lower{display:grid;grid-template-columns:1.3fr 1fr;gap:20px;margin-top:20px;align-items:start}
+.panel{padding:20px}
+.panel h2{font-size:18px;color:var(--brand);margin-bottom:4px}
+.panel .sub{color:var(--muted);font-size:13.5px;margin-bottom:14px}
+.pill{display:inline-block;font-size:11.5px;font-weight:700;padding:2px 9px;border-radius:999px;font-family:var(--font-head);letter-spacing:.03em}
+.pill.p1{background:var(--p1);color:#1c2733}
+.pill.p2{background:var(--p2);color:#1c2733}
+.res{border:1px solid var(--line);border-radius:8px;margin-bottom:12px;overflow:hidden}
+.res-h{display:flex;align-items:center;gap:10px;padding:10px 14px;font-family:var(--font-head);font-weight:700;font-size:14px;color:#fff}
+.role{padding:10px 14px;border-top:1px solid var(--line)}
+.role-t{font-weight:600;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.role ul{margin:6px 0 0;padding-left:20px;font-size:13.5px;color:var(--text)}
+.role li{margin:2px 0}
+.role .note{font-size:12.5px;color:var(--muted);margin-top:4px}
+.badge{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:1px 7px;border-radius:4px}
+.badge.new{background:#dff6e5;color:#13703a}
+.badge.moved{background:#fff0dc;color:#9a4d00}
+.badge.ended{background:#fde3e6;color:#a1182d}
+.empty{color:var(--muted);font-style:italic;font-size:13.5px}
+
+.events{list-style:none;margin:0;padding:0;position:relative}
+.events::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.events li{position:relative;padding:0 0 16px 28px}
+.events li button{all:unset;cursor:pointer;display:block}
+.events li::before{content:"";position:absolute;left:0;top:5px;width:12px;height:12px;border-radius:50%;background:var(--surface);border:3px solid var(--accent)}
+.events li.act::before{background:var(--accent)}
+.events .d{font-family:var(--font-head);font-weight:700;font-size:13px;color:var(--brand)}
+.events .t{font-size:13.5px}
+.events button:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+
+.compare{margin-top:20px;padding:20px}
+.compare h2{font-size:18px;color:var(--brand);margin-bottom:14px}
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.cmp h3{font-size:14px;margin-bottom:10px;display:flex;gap:8px;align-items:center}
+.cmp .res-h{font-size:13px;padding:8px 12px}
+.cmp .role{padding:8px 12px;font-size:13.5px}
+
+footer{color:var(--muted);font-size:12.5px;text-align:center;padding:10px 24px 30px}
+
+@media (max-width:900px){
+  .kpis{grid-template-columns:repeat(2,1fr)}
+  .lower,.cmp{grid-template-columns:1fr}
+  :root{--label-w:170px}
+}
+@media (max-width:520px){
+  .topbar .in,.hero .in{padding-left:16px;padding-right:16px}
+  main{padding:0 16px 40px}
+  .scroll{padding:0 12px 6px}
+  .tl-head,.hint{padding-left:12px;padding-right:12px}
+  .kpi .v{font-size:24px}
+  .logo span{display:none}
+}
+</style>
+</head>
+<body>
+<header class="topbar"><div class="in">
+  <div class="logo"><i></i><span>NORMA GEOSYSTEMS</span></div>
+  <div class="sp"></div>
+  <div class="seg" role="group" aria-label="Language">
+    <button data-lang="no" aria-pressed="true">NO</button><button data-lang="pl" aria-pressed="false">PL</button>
+  </div>
+  <div class="seg" role="group" aria-label="Theme">
+    <button data-th="light" aria-pressed="false" title="Light">☀</button><button data-th="dark" aria-pressed="false" title="Dark">☾</button>
+  </div>
+</div></header>
+
+<section class="hero"><div class="in">
+  <div class="kicker" data-i18n="kicker"></div>
+  <h1 data-i18n="title"></h1>
+  <p data-i18n="lead"></p>
+</div></section>
+
+<main>
+  <div class="kpis" id="kpis"></div>
+
+  <section class="card tl">
+    <div class="tl-head">
+      <h2 data-i18n="tlTitle"></h2>
+      <div class="legend" id="legend"></div>
+    </div>
+    <div class="scroll" id="scroll">
+      <div class="grid" id="grid"></div>
+      <div class="scrub">
+        <label for="range" data-i18n="scrub"></label>
+        <input type="range" id="range" min="0" step="1">
+      </div>
+    </div>
+    <div class="hint" data-i18n="hint"></div>
+  </section>
+
+  <div class="lower">
+    <section class="card panel" id="detail" aria-live="polite"></section>
+    <section class="card panel">
+      <h2 data-i18n="evTitle"></h2>
+      <div class="sub" data-i18n="evSub"></div>
+      <ul class="events" id="events"></ul>
+    </section>
+  </div>
+
+  <section class="card compare">
+    <h2 data-i18n="cmpTitle"></h2>
+    <div class="cmp" id="cmp"></div>
+  </section>
+</main>
+<footer data-i18n="foot"></footer>
+
+<script>
+/* ---------------- DATA (fra regnearket) ---------------- */
+const D = s => new Date(s + "T00:00:00");
+const T0 = D("2024-08-01"), T1 = D("2026-12-31"), TODAY = D("2026-11-09");
+
+const PERIODS = [
+  {id:"p1", from:"2024-08-01", to:"2025-08-06", label:{no:"Periode 1 · fra 01.08.2024", pl:"Okres 1 · od 01.08.2024"}},
+  {id:"p2", from:"2025-08-07", to:null,         label:{no:"Periode 2 · fra 07.08.2025", pl:"Okres 2 · od 07.08.2025"}}
+];
+
+const DUTIES = {
+  leder:[
+    ["Konsultasjonstjenester knyttet til stikning – tilbys uten ekstra kostnad.","Usługi konsultacyjne związane z tyczeniem – bez dodatkowych kosztów."],
+    ["Rådgivning vedrørende valg av software, utstyr og metodikk.","Doradztwo w zakresie wyboru oprogramowania, sprzętu i metodyki."],
+    ["Overvåkning og kvalitetssikring av geomatiske data.","Nadzór i kontrola jakości danych geomatycznych."],
+    ["Proaktiv innsats for å oppfylle prosjektets spesifikasjoner og kvalitetskrav.","Proaktywne działania na rzecz spełnienia specyfikacji i wymagań jakościowych projektu."],
+    ["Utførelse av både regelmessige og sporadiske oppmålingsoppdrag.","Realizacja zarówno regularnych, jak i doraźnych zadań pomiarowych."],
+    ["Fleksibel arbeidstid på stedet ved behov.","Elastyczny czas pracy na miejscu w razie potrzeby."],
+    ["Support av NORMA Geosystems’ ressurser etter behov.","Wsparcie zasobów NORMA Geosystems w razie potrzeby."]
+  ],
+  mengde:[
+    ["Mengdeberegning: Nøyaktig kalkulasjon og verifisering av materialer og volumer.","Obliczenia ilości: dokładna kalkulacja i weryfikacja materiałów i objętości."],
+    ["Målebrev: Utarbeidelse og kontroll av delmålebrev og målebrev.","Målebrev: przygotowanie i kontrola przedmiarów częściowych i końcowych."],
+    ["Datahåndtering: Effektiv styring og organisering av prosjektdatabaser.","Zarządzanie danymi: efektywne zarządzanie i organizacja baz danych projektu."],
+    ["Leveranser: Pålitelig og rettidig levering av alle nødvendige rapporter og dokumentasjon.","Dostawy: rzetelne i terminowe dostarczanie wszystkich wymaganych raportów i dokumentacji."]
+  ],
+  felt:[
+    ["Utstikking av linjer, punkter og profiler.","Tyczenie linii, punktów i profili."],
+    ["As-built målinger og produksjon av nødvendig dokumentasjon.","Pomiary powykonawcze (as-built) i przygotowanie wymaganej dokumentacji."],
+    ["Løpende fremdrifts- og kvalitetskontroll.","Bieżąca kontrola postępu i jakości."],
+    ["Etablering, måling og vedlikehold av grunnlagsnett.","Zakładanie, pomiar i utrzymanie osnowy geodezyjnej."],
+    ["Fremdrifts- og deformasjonskontroll i tunnel.","Kontrola postępu i deformacji w tunelu."],
+    ["Fleksibel bistand til øvrige stikningsrelaterte oppgaver etter behov.","Elastyczne wsparcie przy innych zadaniach związanych z tyczeniem w razie potrzeby."],
+    ["Tett rapportering til stikningsleder (Ressurs 1) og samhandling med prosjektets mengdeberegner (Ressurs 2).","Ścisłe raportowanie do kierownika tyczenia (Zasób 1) i współpraca z osobą odpowiedzialną za obliczenia ilości (Zasób 2)."]
+  ],
+  panorama:[["360° Panorama-bilder for visuell dokumentasjon.","Zdjęcia panoramiczne 360° do dokumentacji wizualnej."]],
+  drone:[], foto:[], prosj:[], geo:[]
+};
+
+const RES = [
+  {id:"r1", color:"var(--r1)", name:{no:"Ressurs 1",pl:"Zasób 1"}},
+  {id:"r2", color:"var(--r2)", name:{no:"Ressurs 2",pl:"Zasób 2"}},
+  {id:"r3", color:"var(--r3)", name:{no:"Ressurs 3",pl:"Zasób 3"}},
+  {id:"sh", color:"var(--shared)", name:{no:"Felles tjenester",pl:"Usługi wspólne"}, shared:true}
+];
+
+/* Hver "lane" = én rolle; segments = tidsrom (per periode) */
+const LANES = [
+  {res:"r1", duty:"leder", name:{no:"Stikningsleder",pl:"Kierownik tyczenia"},
+    seg:[{from:"2024-08-01",to:"2025-08-06",p:"p1"},{from:"2025-08-07",to:null,p:"p2"}]},
+  {res:"r2", duty:"mengde", name:{no:"Mengdeberegner",pl:"Obliczenia ilości"},
+    seg:[{from:"2024-08-01",to:"2025-08-06",p:"p1"},{from:"2025-08-07",to:null,p:"p2"}]},
+  {res:"r2", duty:"felt", name:{no:"Feltstiker",pl:"Tyczący w terenie"},
+    seg:[{from:"2024-09-01",to:"2025-08-06",p:"p1",
+      note:{no:"Utført av Ressurs 2 i tillegg til mengdeberegning.",pl:"Wykonywane przez Zasób 2 równolegle z obliczeniami ilości."}}]},
+  {res:"r2", duty:"drone", name:{no:"Drone flyvning",pl:"Loty dronem"},
+    seg:[{from:"2024-08-01",to:"2024-12-31",p:"p1"}]},
+  {res:"r2", duty:"foto", name:{no:"Fotogrammetri prosessering",pl:"Przetwarzanie fotogrametryczne"},
+    seg:[{from:"2024-08-01",to:"2024-12-31",p:"p1"}]},
+  {res:"r3", duty:"felt", name:{no:"Feltstikkere (rotasjon 14/14)",pl:"Tyczący w terenie (rotacja 14/14)"},
+    seg:[{from:"2025-08-07",to:null,p:"p2", badge:"moved",
+      note:{no:"Feltstikking flyttet fra Ressurs 2 til egen ressurs med rotasjonsordning 14/14.",pl:"Tyczenie w terenie przeniesione z Zasobu 2 do osobnego zasobu w systemie rotacyjnym 14/14."}}]},
+  {res:"r3", duty:"panorama", name:{no:"Panorama 360",pl:"Panorama 360"},
+    seg:[{from:"2025-08-07",to:null,p:"p2", badge:"new"}]},
+  {res:"sh", duty:"prosj", name:{no:"Prosjektering støtte",pl:"Wsparcie projektowe"},
+    seg:[{from:"2024-08-01",to:null,p:"both"}]},
+  {res:"sh", duty:"geo", name:{no:"Geometrisk monitorering",pl:"Monitoring geometryczny"},
+    seg:[{from:"2024-08-01",to:null,p:"both"}]}
+];
+
+const EVENTS = [
+  {d:"2024-08-01", t:{no:"Oppstart. Ressurs 1 (stikningsleder) og Ressurs 2 (mengdeberegning, drone og fotogrammetri).",pl:"Start. Zasób 1 (kierownik tyczenia) i Zasób 2 (obliczenia ilości, dron i fotogrametria)."}},
+  {d:"2024-09-01", t:{no:"Ressurs 2 tar i tillegg rollen som feltstiker.",pl:"Zasób 2 przejmuje dodatkowo rolę tyczącego w terenie."}},
+  {d:"2024-12-31", t:{no:"Droneflyging og fotogrammetri-prosessering avsluttes.",pl:"Zakończenie lotów dronem i przetwarzania fotogrametrycznego."}},
+  {d:"2025-08-07", t:{no:"Ny periode: Ressurs 3 innføres – feltstikkere i rotasjon 14/14 og 360° panorama. Ressurs 2 fokuserer på mengdeberegning.",pl:"Nowy okres: wprowadzenie Zasobu 3 – tyczący w terenie w rotacji 14/14 oraz panoramy 360°. Zasób 2 skupia się na obliczeniach ilości."}},
+  {d:"2026-11-09", t:{no:"I dag – Periode 2 pågår.",pl:"Dziś – trwa Okres 2."}}
+];
+
+const I18N = {
+  no:{kicker:"Stikning og oppmåling · 2024–2026",title:"Ressursfordeling – tidslinje",
+    lead:"Hvordan antall ressurser og ansvarsområdene til hver ressurs har endret seg over tid. Dra i tidslinjen, klikk på en rolle eller en hendelse for detaljer.",
+    tlTitle:"Tidslinje for ressurser og roller",scrub:"Velg dato",
+    hint:"Tips: klikk/dra i tidslinjen for å flytte markøren, klikk på en stolpe for å se oppgavene til rollen.",
+    evTitle:"Viktige endringer",evSub:"Klikk for å hoppe til datoen.",
+    cmpTitle:"Sammenligning av periodene",foot:"Kilde: ressursoversikt (regneark). Felles tjenester er vist for hele perioden uten fast ressurstilknytning.",
+    kRes:"Ressurser nå",kRoles:"Aktive roller",kDuties:"Oppgaver",kPer:"Periode",of:"av",
+    at:"Status per",active:"Aktive ressurser og roller",noDuties:"Ingen detaljert oppgaveliste i kildedokumentet.",
+    ongoing:"pågående",new:"Ny",moved:"Flyttet",ended:"Avsluttet",today:"I dag",
+    roleSel:"Valgt rolle",back:"Vis status for dato",
+    removed:"Ikke videreført",legendShared:"Felles tjenester",
+    sel:"Klikk på en annen stolpe eller hendelse for å bytte."},
+  pl:{kicker:"Tyczenie i pomiary · 2024–2026",title:"Podział zasobów – oś czasu",
+    lead:"Jak zmieniała się liczba zasobów (ressurs) i zakres obowiązków każdego z nich. Przeciągnij oś czasu, kliknij rolę lub zdarzenie, aby zobaczyć szczegóły.",
+    tlTitle:"Oś czasu zasobów i ról",scrub:"Wybierz datę",
+    hint:"Wskazówka: kliknij/przeciągnij na osi czasu, aby przesunąć znacznik; kliknij pasek, aby zobaczyć zadania danej roli.",
+    evTitle:"Kluczowe zmiany",evSub:"Kliknij, aby przejść do daty.",
+    cmpTitle:"Porównanie okresów",foot:"Źródło: zestawienie zasobów (arkusz). Usługi wspólne pokazano dla całego okresu, bez przypisania do konkretnego zasobu.",
+    kRes:"Zasoby teraz",kRoles:"Aktywne role",kDuties:"Zadania",kPer:"Okres",of:"z",
+    at:"Stan na",active:"Aktywne zasoby i role",noDuties:"Brak szczegółowej listy zadań w dokumencie źródłowym.",
+    ongoing:"trwa",new:"Nowe",moved:"Przeniesione",ended:"Zakończone",today:"Dziś",
+    roleSel:"Wybrana rola",back:"Pokaż stan na datę",
+    removed:"Nie kontynuowane",legendShared:"Usługi wspólne",
+    sel:"Kliknij inny pasek lub zdarzenie, aby zmienić."}
+};
+
+/* ---------------- STATE ---------------- */
+const DAY = 864e5;
+const SPAN = (T1 - T0) / DAY;
+let lang = "no", cur = TODAY, sel = null;
+try { lang = localStorage.getItem("ohla-lang") || "no"; } catch(e){}
+
+const $ = s => document.querySelector(s);
+const pct = d => ((d - T0) / DAY) / SPAN * 100;
+const segEnd = s => s.to ? D(s.to) : T1;
+const fmt = d => d.toLocaleDateString(lang === "pl" ? "pl-PL" : "nb-NO", {day:"2-digit",month:"2-digit",year:"numeric"});
+const t = k => I18N[lang][k];
+const resOf = id => RES.find(r => r.id === id);
+const dutyText = (k) => DUTIES[k].map(x => lang === "pl" ? x[1] : x[0]);
+const isActive = (s, d) => d >= D(s.from) && d <= segEnd(s);
+const periodAt = d => PERIODS.find(p => d >= D(p.from) && (!p.to || d <= D(p.to)));
+
+/* ---------------- RENDER: timeline ---------------- */
+function buildGrid(){
+  const g = $("#grid"); g.innerHTML = "";
+  const row = (cls, labHTML, trackHTML) => {
+    g.insertAdjacentHTML("beforeend", `<div class="lab ${cls}">${labHTML}</div><div class="track ${cls}">${trackHTML}</div>`);
+  };
+  // years
+  const years = []; const months = [];
+  for (let d = new Date(T0); d <= T1; d = new Date(d.getFullYear(), d.getMonth()+1, 1)){
+    const next = new Date(d.getFullYear(), d.getMonth()+1, 1);
+    const w = (Math.min(next, new Date(+T1 + DAY)) - d) / DAY / SPAN * 100;
+    months.push(`<div style="width:${w}%">${d.getMonth()+1}</div>`);
+    const y = years[years.length-1];
+    if (y && y.y === d.getFullYear()) y.w += w; else years.push({y:d.getFullYear(), w});
+  }
+  g.insertAdjacentHTML("beforeend", `<div class="lab years"></div><div class="track years">${years.map(y=>`<div style="width:${y.w}%">${y.y}</div>`).join("")}</div>`);
+  g.insertAdjacentHTML("beforeend", `<div class="lab months"></div><div class="track months">${months.join("")}</div>`);
+  // periods
+  row("periods row-sep", "", PERIODS.map(p => {
+    const l = pct(D(p.from)), r = pct(p.to ? D(p.to) : T1);
+    return `<button class="pband ${p.id} ${p.to?"":"open"}" style="left:${l}%;width:${r-l}%" data-jump="${p.from}">${p.label[lang]}</button>`;
+  }).join(""));
+  // groups + lanes
+  RES.forEach(r => {
+    row("group row-sep", `<span class="dot" style="background:${r.color}"></span>${r.name[lang]}`, "");
+    LANES.filter(l => l.res === r.id).forEach((l, i) => {
+      const li = LANES.indexOf(l);
+      const bars = l.seg.map((s, si) => {
+        const a = pct(D(s.from)), b = pct(segEnd(s) - 0 + DAY);
+        const badge = s.badge ? `<span class="tag">${t(s.badge)}</span>` : "";
+        return `<button class="bar ${r.shared?"shared":""} ${s.to?"":"open"}" data-l="${li}" data-s="${si}"
+          style="left:${a}%;width:${Math.min(b,100)-a}%;background-color:${r.color}"
+          title="${l.name[lang]} · ${fmt(D(s.from))} – ${s.to?fmt(D(s.to)):t("ongoing")}">${l.name[lang]}${badge}</button>`;
+      }).join("");
+      row("lane", l.name[lang], bars);
+    });
+  });
+  // overlay with today line, period divider, cursor (spans track column)
+  g.insertAdjacentHTML("beforeend", `<div class="overlay" id="ov" style="left:var(--label-w)">
+     <div class="vline" style="left:${pct(D("2025-08-07"))}%"></div>
+     <div class="vline today" style="left:${pct(TODAY)}%"><span>${t("today")}</span></div>
+     <div class="cursor" id="cursor"></div></div>`);
+  $("#ov").style.right = "0";
+  g.querySelectorAll(".bar").forEach(b => b.addEventListener("click", e => {
+    e.stopPropagation();
+    sel = {l:+b.dataset.l, s:+b.dataset.s};
+    const s = LANES[sel.l].seg[sel.s];
+    if (!isActive(s, cur)) cur = new Date(Math.max(D(s.from), Math.min(segEnd(s), TODAY)));
+    update();
+  }));
+  g.querySelectorAll("[data-jump]").forEach(b => b.addEventListener("click", e => { e.stopPropagation(); sel=null; cur = D(b.dataset.jump); update(); }));
+  // drag-to-scrub on track area
+  let drag = false;
+  const setFromX = x => {
+    const tr = g.querySelector(".track.months").getBoundingClientRect();
+    const f = Math.max(0, Math.min(1, (x - tr.left) / tr.width));
+    cur = new Date(+T0 + Math.round(f * SPAN) * DAY); sel = null; update();
+  };
+  g.addEventListener("pointerdown", e => {
+    if (e.target.closest(".bar,.pband") || !e.target.closest(".track")) return;
+    drag = true; g.setPointerCapture(e.pointerId); setFromX(e.clientX);
+  });
+  g.addEventListener("pointermove", e => drag && setFromX(e.clientX));
+  g.addEventListener("pointerup", () => drag = false);
+}
+
+/* ---------------- RENDER: other parts ---------------- */
+function activeAt(d){
+  const out = [];
+  LANES.forEach((l, li) => l.seg.forEach((s, si) => { if (isActive(s, d)) out.push({l, s, li, si}); }));
+  return out;
+}
+function roleBlock(l, s, extra=""){
+  const duties = dutyText(l.duty);
+  const badge = s.badge ? `<span class="badge ${s.badge}">${t(s.badge)}</span>` : "";
+  return `<div class="role"><div class="role-t">${l.name[lang]} ${badge}</div>
+    <div class="note">${fmt(D(s.from))} – ${s.to ? fmt(D(s.to)) : t("ongoing")}${s.note ? " · " + s.note[lang] : ""}</div>
+    ${duties.length ? `<ul>${duties.map(x=>`<li>${x}</li>`).join("")}</ul>` : `<div class="empty">${t("noDuties")}</div>`}${extra}</div>`;
+}
+function groupByRes(list, compact){
+  return RES.map(r => {
+    const items = list.filter(x => x.l.res === r.id);
+    if (!items.length) return "";
+    return `<div class="res"><div class="res-h" style="background:${r.color}">${r.name[lang]}</div>
+      ${items.map(x => compact ? compactRole(x) : roleBlock(x.l, x.s)).join("")}</div>`;
+  }).join("");
+}
+function compactRole(x){
+  const n = DUTIES[x.l.duty].length;
+  const badge = x.s.badge ? ` <span class="badge ${x.s.badge}">${t(x.s.badge)}</span>` : (x.ended ? ` <span class="badge ended">${t("ended")}</span>` : "");
+  return `<div class="role"><div class="role-t">${x.l.name[lang]}${badge}</div>
+    <div class="note">${n ? n + " " + t("kDuties").toLowerCase() : t("noDuties")}${x.s.note ? " · " + x.s.note[lang] : ""}</div></div>`;
+}
+
+function renderKpis(){
+  const act = activeAt(cur);
+  const res = new Set(act.filter(x => x.l.res !== "sh").map(x => x.l.res));
+  const roles = act.filter(x => x.l.res !== "sh").length;
+  const duties = act.reduce((a, x) => a + DUTIES[x.l.duty].length, 0);
+  const p = periodAt(cur);
+  $("#kpis").innerHTML = [
+    [t("kRes"), `${res.size}`, fmt(cur)],
+    [t("kRoles"), `${roles}`, `+ ${act.length-roles} ${t("legendShared").toLowerCase()}`],
+    [t("kDuties"), `${duties}`, t("active").toLowerCase()],
+    [t("kPer"), p ? (p.id === "p1" ? "1" : "2") + ` <small>${t("of")} 2</small>` : "–", p ? p.label[lang].split("·")[1] : ""]
+  ].map(k => `<div class="card kpi"><div class="l">${k[0]}</div><div class="v">${k[1]}</div><div class="s">${k[2]}</div></div>`).join("");
+}
+
+function renderDetail(){
+  const el = $("#detail");
+  if (sel){
+    const l = LANES[sel.l], s = l.seg[sel.s], r = resOf(l.res);
+    el.innerHTML = `<h2>${t("roleSel")}</h2><div class="sub">${t("sel")}</div>
+      <div class="res"><div class="res-h" style="background:${r.color}">${r.name[lang]}</div>${roleBlock(l, s)}</div>
+      <button class="pband p1" style="position:static;display:inline-flex;padding:6px 12px;background:var(--accent);color:#fff" id="back">${t("back")} ${fmt(cur)}</button>`;
+    $("#back").onclick = () => { sel = null; update(); };
+    return;
+  }
+  const p = periodAt(cur);
+  el.innerHTML = `<h2>${t("at")} ${fmt(cur)}</h2>
+    <div class="sub">${p ? `<span class="pill ${p.id}">${p.label[lang]}</span>` : ""}</div>
+    ${groupByRes(activeAt(cur))}`;
+}
+
+function renderEvents(){
+  $("#events").innerHTML = EVENTS.map(e => `<li class="${+D(e.d)===+cur?"act":""}"><button data-d="${e.d}">
+    <div class="d">${fmt(D(e.d))}</div><div class="t">${e.t[lang]}</div></button></li>`).join("");
+  document.querySelectorAll("#events button").forEach(b => b.onclick = () => { sel = null; cur = D(b.dataset.d); update(); });
+}
+
+function renderCompare(){
+  const col = p => {
+    const list = [];
+    LANES.forEach(l => l.seg.forEach(s => { if (s.p === p.id || s.p === "both") list.push({l, s, ended: p.id==="p1" && s.to && D(s.to) < D(p.to)}); }));
+    const res = new Set(list.filter(x=>x.l.res!=="sh").map(x=>x.l.res)).size;
+    return `<div><h3><span class="pill ${p.id}">${p.label[lang]}</span> ${res} ${lang==="pl"?"zasoby":"ressurser"}</h3>${groupByRes(list, true)}</div>`;
+  };
+  $("#cmp").innerHTML = PERIODS.map(col).join("");
+}
+
+function renderLegend(){
+  $("#legend").innerHTML = RES.map(r => `<span><b style="background:${r.color}"></b>${r.name[lang]}</span>`).join("")
+    + `<span><b style="background:var(--today)"></b>${t("today")}</span>`;
+}
+
+function update(){
+  const r = $("#range");
+  r.value = Math.round((cur - T0) / DAY);
+  $("#cursor").style.left = pct(cur) + "%";
+  document.querySelectorAll(".bar").forEach(b => {
+    const s = LANES[+b.dataset.l].seg[+b.dataset.s];
+    b.classList.toggle("dim", !isActive(s, cur));
+    b.classList.toggle("sel", !!sel && sel.l === +b.dataset.l && sel.s === +b.dataset.s);
+  });
+  renderKpis(); renderDetail(); renderEvents();
+}
+
+function applyLang(){
+  document.documentElement.lang = lang === "pl" ? "pl" : "no";
+  document.querySelectorAll("[data-i18n]").forEach(e => e.textContent = t(e.dataset.i18n));
+  document.querySelectorAll("[data-lang]").forEach(b => b.setAttribute("aria-pressed", b.dataset.lang === lang));
+  buildGrid(); renderLegend(); renderCompare(); update();
+}
+
+/* ---------------- INIT ---------------- */
+$("#range").max = Math.round(SPAN);
+$("#range").addEventListener("input", e => { sel = null; cur = new Date(+T0 + e.target.value * DAY); update(); });
+document.querySelectorAll("[data-lang]").forEach(b => b.onclick = () => {
+  lang = b.dataset.lang; try { localStorage.setItem("ohla-lang", lang); } catch(e){} applyLang();
+});
+document.querySelectorAll("[data-th]").forEach(b => b.onclick = () => {
+  const on = b.getAttribute("aria-pressed") !== "true";
+  document.querySelectorAll("[data-th]").forEach(x => x.setAttribute("aria-pressed","false"));
+  if (on){ document.documentElement.dataset.theme = b.dataset.th; b.setAttribute("aria-pressed","true"); }
+  else delete document.documentElement.dataset.theme;
+});
+applyLang();
+// scroll timeline so "today" is visible on narrow screens
+requestAnimationFrame(() => { const sc = $("#scroll"); sc.scrollLeft = sc.scrollWidth; });
+</script>
+</body>
+</html>

@@ -9,7 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 /* ==========================================================
-   DESIGN TOKENS – paleta NORMA Geosystems (norma-gs.no/styles.css)
+   DESIGN TOKENS – NORMA Geosystems palette (norma-gs.no/styles.css)
    ========================================================== */
 :root{
   --anthracite:#383E42; --anthracite-2:#2D3236; --anthracite-3:#22272A;
@@ -17,9 +17,9 @@
   --bg:#FFFFFF; --alt:#F5F5F5; --surface:#FFFFFF;
   --text:#383E42; --muted:#666666; --line:#E5E5E5;
   --accent-ink:var(--yellow-deep);
-  --r1:#383E42; --r1-ink:#FFFFFF;          /* Ressurs 1 – antracyt */
-  --r2:#F4BB29; --r2-ink:#383E42;          /* Ressurs 2 – żółty */
-  --r3:#8A9399; --r3-ink:#FFFFFF;          /* Ressurs 3 – grafit */
+  --r1:#383E42; --r1-ink:#FFFFFF;          /* Resource 1 – anthracite */
+  --r2:#F4BB29; --r2-ink:#383E42;          /* Resource 2 – yellow */
+  --r3:#8A9399; --r3-ink:#FFFFFF;          /* Resource 3 – graphite */
   --shared:#B9BEC2; --shared-2:#D3D6D9; --shared-ink:#383E42;
   --p1-bg:rgba(244,187,41,.16); --p1-ink:#383E42;
   --p2-bg:#383E42; --p2-ink:#FFFFFF;
@@ -198,7 +198,7 @@ footer img{height:34px;width:auto}
   <img src="assets/norma-logo.png" alt="Norma Geosystems" width="221" height="44">
   <div class="sp"></div>
   <div class="seg" role="group" aria-label="Language">
-    <button data-lang="no" aria-pressed="true">NO</button><button data-lang="pl" aria-pressed="false">PL</button>
+    <button data-lang="no" aria-pressed="true">NO</button><button data-lang="en" aria-pressed="false">EN</button>
   </div>
   <div class="seg" role="group" aria-label="Theme">
     <button data-th="light" aria-pressed="false" title="Light">☀</button><button data-th="dark" aria-pressed="false" title="Dark">☾</button>
@@ -259,76 +259,76 @@ const D = s => new Date(s + "T00:00:00");
 const T0 = D("2024-08-01"), T1 = D("2026-12-31"), TODAY = D("2026-11-09");
 
 const PERIODS = [
-  {id:"p1", from:"2024-08-01", to:"2025-08-06", label:{no:"Periode 1 · fra 01.08.2024", pl:"Okres 1 · od 01.08.2024"}},
-  {id:"p2", from:"2025-08-07", to:null,         label:{no:"Periode 2 · fra 07.08.2025", pl:"Okres 2 · od 07.08.2025"}}
+  {id:"p1", from:"2024-08-01", to:"2025-08-06", label:{no:"Periode 1 · fra 01.08.2024", en:"Period 1 · from 01.08.2024"}},
+  {id:"p2", from:"2025-08-07", to:null,         label:{no:"Periode 2 · fra 07.08.2025", en:"Period 2 · from 07.08.2025"}}
 ];
 
 const DUTIES = {
   leder:[
-    ["Konsultasjonstjenester knyttet til stikning – tilbys uten ekstra kostnad.","Usługi konsultacyjne związane z tyczeniem – bez dodatkowych kosztów."],
-    ["Rådgivning vedrørende valg av software, utstyr og metodikk.","Doradztwo w zakresie wyboru oprogramowania, sprzętu i metodyki."],
-    ["Overvåkning og kvalitetssikring av geomatiske data.","Nadzór i kontrola jakości danych geomatycznych."],
-    ["Proaktiv innsats for å oppfylle prosjektets spesifikasjoner og kvalitetskrav.","Proaktywne działania na rzecz spełnienia specyfikacji i wymagań jakościowych projektu."],
-    ["Utførelse av både regelmessige og sporadiske oppmålingsoppdrag.","Realizacja zarówno regularnych, jak i doraźnych zadań pomiarowych."],
-    ["Fleksibel arbeidstid på stedet ved behov.","Elastyczny czas pracy na miejscu w razie potrzeby."],
-    ["Support av NORMA Geosystems’ ressurser etter behov.","Wsparcie zasobów NORMA Geosystems w razie potrzeby."]
+    ["Konsultasjonstjenester knyttet til stikning – tilbys uten ekstra kostnad.","Consulting services related to setting-out – provided at no extra cost."],
+    ["Rådgivning vedrørende valg av software, utstyr og metodikk.","Advice on the choice of software, equipment and methodology."],
+    ["Overvåkning og kvalitetssikring av geomatiske data.","Monitoring and quality assurance of geomatic data."],
+    ["Proaktiv innsats for å oppfylle prosjektets spesifikasjoner og kvalitetskrav.","Proactive effort to meet the project's specifications and quality requirements."],
+    ["Utførelse av både regelmessige og sporadiske oppmålingsoppdrag.","Execution of both regular and ad-hoc survey assignments."],
+    ["Fleksibel arbeidstid på stedet ved behov.","Flexible on-site working hours as needed."],
+    ["Support av NORMA Geosystems’ ressurser etter behov.","Support from NORMA Geosystems' resources as needed."]
   ],
   mengde:[
-    ["Mengdeberegning: Nøyaktig kalkulasjon og verifisering av materialer og volumer.","Obliczenia ilości: dokładna kalkulacja i weryfikacja materiałów i objętości."],
-    ["Målebrev: Utarbeidelse og kontroll av delmålebrev og målebrev.","Målebrev: przygotowanie i kontrola przedmiarów częściowych i końcowych."],
-    ["Datahåndtering: Effektiv styring og organisering av prosjektdatabaser.","Zarządzanie danymi: efektywne zarządzanie i organizacja baz danych projektu."],
-    ["Leveranser: Pålitelig og rettidig levering av alle nødvendige rapporter og dokumentasjon.","Dostawy: rzetelne i terminowe dostarczanie wszystkich wymaganych raportów i dokumentacji."]
+    ["Mengdeberegning: Nøyaktig kalkulasjon og verifisering av materialer og volumer.","Quantity surveying: accurate calculation and verification of materials and volumes."],
+    ["Målebrev: Utarbeidelse og kontroll av delmålebrev og målebrev.","Measurement statements (målebrev): preparation and checking of interim and final statements."],
+    ["Datahåndtering: Effektiv styring og organisering av prosjektdatabaser.","Data management: efficient management and organisation of project databases."],
+    ["Leveranser: Pålitelig og rettidig levering av alle nødvendige rapporter og dokumentasjon.","Deliverables: reliable and timely delivery of all required reports and documentation."]
   ],
   felt:[
-    ["Utstikking av linjer, punkter og profiler.","Tyczenie linii, punktów i profili."],
-    ["As-built målinger og produksjon av nødvendig dokumentasjon.","Pomiary powykonawcze (as-built) i przygotowanie wymaganej dokumentacji."],
-    ["Løpende fremdrifts- og kvalitetskontroll.","Bieżąca kontrola postępu i jakości."],
-    ["Etablering, måling og vedlikehold av grunnlagsnett.","Zakładanie, pomiar i utrzymanie osnowy geodezyjnej."],
-    ["Fremdrifts- og deformasjonskontroll i tunnel.","Kontrola postępu i deformacji w tunelu."],
-    ["Fleksibel bistand til øvrige stikningsrelaterte oppgaver etter behov.","Elastyczne wsparcie przy innych zadaniach związanych z tyczeniem w razie potrzeby."],
-    ["Tett rapportering til stikningsleder (Ressurs 1) og samhandling med prosjektets mengdeberegner (Ressurs 2).","Ścisłe raportowanie do kierownika tyczenia (Zasób 1) i współpraca z osobą odpowiedzialną za obliczenia ilości (Zasób 2)."]
+    ["Utstikking av linjer, punkter og profiler.","Setting-out of lines, points and profiles."],
+    ["As-built målinger og produksjon av nødvendig dokumentasjon.","As-built surveys and production of the required documentation."],
+    ["Løpende fremdrifts- og kvalitetskontroll.","Ongoing progress and quality control."],
+    ["Etablering, måling og vedlikehold av grunnlagsnett.","Establishment, measurement and maintenance of the survey control network."],
+    ["Fremdrifts- og deformasjonskontroll i tunnel.","Progress and deformation monitoring in the tunnel."],
+    ["Fleksibel bistand til øvrige stikningsrelaterte oppgaver etter behov.","Flexible assistance with other setting-out related tasks as needed."],
+    ["Tett rapportering til stikningsleder (Ressurs 1) og samhandling med prosjektets mengdeberegner (Ressurs 2).","Close reporting to the setting-out lead (Resource 1) and collaboration with the project's quantity surveyor (Resource 2)."]
   ],
-  panorama:[["360° Panorama-bilder for visuell dokumentasjon.","Zdjęcia panoramiczne 360° do dokumentacji wizualnej."]],
+  panorama:[["360° Panorama-bilder for visuell dokumentasjon.","360° panoramic images for visual documentation."]],
   drone:[], foto:[], prosj:[], geo:[]
 };
 
 const RES = [
-  {id:"r1", color:"var(--r1)", ink:"var(--r1-ink)", name:{no:"Ressurs 1",pl:"Zasób 1"}},
-  {id:"r2", color:"var(--r2)", ink:"var(--r2-ink)", name:{no:"Ressurs 2",pl:"Zasób 2"}},
-  {id:"r3", color:"var(--r3)", ink:"var(--r3-ink)", name:{no:"Ressurs 3",pl:"Zasób 3"}},
-  {id:"sh", color:"var(--shared)", ink:"var(--shared-ink)", name:{no:"Felles tjenester",pl:"Usługi wspólne"}, shared:true}
+  {id:"r1", color:"var(--r1)", ink:"var(--r1-ink)", name:{no:"Ressurs 1",en:"Resource 1"}},
+  {id:"r2", color:"var(--r2)", ink:"var(--r2-ink)", name:{no:"Ressurs 2",en:"Resource 2"}},
+  {id:"r3", color:"var(--r3)", ink:"var(--r3-ink)", name:{no:"Ressurs 3",en:"Resource 3"}},
+  {id:"sh", color:"var(--shared)", ink:"var(--shared-ink)", name:{no:"Felles tjenester",en:"Shared services"}, shared:true}
 ];
 
 /* Hver "lane" = én rolle; segments = tidsrom (per periode) */
 const LANES = [
-  {res:"r1", duty:"leder", name:{no:"Stikningsleder",pl:"Kierownik tyczenia"},
+  {res:"r1", duty:"leder", name:{no:"Stikningsleder",en:"Setting-out lead"},
     seg:[{from:"2024-08-01",to:"2025-08-06",p:"p1"},{from:"2025-08-07",to:null,p:"p2"}]},
-  {res:"r2", duty:"mengde", name:{no:"Mengdeberegner",pl:"Obliczenia ilości"},
+  {res:"r2", duty:"mengde", name:{no:"Mengdeberegner",en:"Quantity surveyor"},
     seg:[{from:"2024-08-01",to:"2025-08-06",p:"p1"},{from:"2025-08-07",to:null,p:"p2"}]},
-  {res:"r2", duty:"felt", name:{no:"Feltstiker",pl:"Tyczący w terenie"},
+  {res:"r2", duty:"felt", name:{no:"Feltstiker",en:"Field surveyor"},
     seg:[{from:"2024-09-01",to:"2025-08-06",p:"p1",
-      note:{no:"Utført av Ressurs 2 i tillegg til mengdeberegning.",pl:"Wykonywane przez Zasób 2 równolegle z obliczeniami ilości."}}]},
-  {res:"r2", duty:"drone", name:{no:"Drone flyvning",pl:"Loty dronem"},
+      note:{no:"Utført av Ressurs 2 i tillegg til mengdeberegning.",en:"Performed by Resource 2 alongside quantity surveying."}}]},
+  {res:"r2", duty:"drone", name:{no:"Drone flyvning",en:"Drone flights"},
     seg:[{from:"2024-08-01",to:"2024-12-31",p:"p1"}]},
-  {res:"r2", duty:"foto", name:{no:"Fotogrammetri prosessering",pl:"Przetwarzanie fotogrametryczne"},
+  {res:"r2", duty:"foto", name:{no:"Fotogrammetri prosessering",en:"Photogrammetry processing"},
     seg:[{from:"2024-08-01",to:"2024-12-31",p:"p1"}]},
-  {res:"r3", duty:"felt", name:{no:"Feltstikkere (rotasjon 14/14)",pl:"Tyczący w terenie (rotacja 14/14)"},
+  {res:"r3", duty:"felt", name:{no:"Feltstikkere (rotasjon 14/14)",en:"Field surveyors (14/14 rotation)"},
     seg:[{from:"2025-08-07",to:null,p:"p2", badge:"moved",
-      note:{no:"Feltstikking flyttet fra Ressurs 2 til egen ressurs med rotasjonsordning 14/14.",pl:"Tyczenie w terenie przeniesione z Zasobu 2 do osobnego zasobu w systemie rotacyjnym 14/14."}}]},
-  {res:"r3", duty:"panorama", name:{no:"Panorama 360",pl:"Panorama 360"},
+      note:{no:"Feltstikking flyttet fra Ressurs 2 til egen ressurs med rotasjonsordning 14/14.",en:"Field setting-out moved from Resource 2 to a dedicated resource on a 14/14 rotation."}}]},
+  {res:"r3", duty:"panorama", name:{no:"Panorama 360",en:"Panorama 360"},
     seg:[{from:"2025-08-07",to:null,p:"p2", badge:"new"}]},
-  {res:"sh", duty:"prosj", name:{no:"Prosjektering støtte",pl:"Wsparcie projektowe"},
+  {res:"sh", duty:"prosj", name:{no:"Prosjektering støtte",en:"Design support"},
     seg:[{from:"2024-08-01",to:null,p:"both"}]},
-  {res:"sh", duty:"geo", name:{no:"Geometrisk monitorering",pl:"Monitoring geometryczny"},
+  {res:"sh", duty:"geo", name:{no:"Geometrisk monitorering",en:"Geometric monitoring"},
     seg:[{from:"2024-08-01",to:null,p:"both"}]}
 ];
 
 const EVENTS = [
-  {d:"2024-08-01", t:{no:"Oppstart. Ressurs 1 (stikningsleder) og Ressurs 2 (mengdeberegning, drone og fotogrammetri).",pl:"Start. Zasób 1 (kierownik tyczenia) i Zasób 2 (obliczenia ilości, dron i fotogrametria)."}},
-  {d:"2024-09-01", t:{no:"Ressurs 2 tar i tillegg rollen som feltstiker.",pl:"Zasób 2 przejmuje dodatkowo rolę tyczącego w terenie."}},
-  {d:"2024-12-31", t:{no:"Droneflyging og fotogrammetri-prosessering avsluttes.",pl:"Zakończenie lotów dronem i przetwarzania fotogrametrycznego."}},
-  {d:"2025-08-07", t:{no:"Ny periode: Ressurs 3 innføres – feltstikkere i rotasjon 14/14 og 360° panorama. Ressurs 2 fokuserer på mengdeberegning.",pl:"Nowy okres: wprowadzenie Zasobu 3 – tyczący w terenie w rotacji 14/14 oraz panoramy 360°. Zasób 2 skupia się na obliczeniach ilości."}},
-  {d:"2026-11-09", t:{no:"I dag – Periode 2 pågår.",pl:"Dziś – trwa Okres 2."}}
+  {d:"2024-08-01", t:{no:"Oppstart. Ressurs 1 (stikningsleder) og Ressurs 2 (mengdeberegning, drone og fotogrammetri).",en:"Start. Resource 1 (setting-out lead) and Resource 2 (quantity surveying, drone and photogrammetry)."}},
+  {d:"2024-09-01", t:{no:"Ressurs 2 tar i tillegg rollen som feltstiker.",en:"Resource 2 additionally takes on the field surveyor role."}},
+  {d:"2024-12-31", t:{no:"Droneflyging og fotogrammetri-prosessering avsluttes.",en:"Drone flights and photogrammetry processing end."}},
+  {d:"2025-08-07", t:{no:"Ny periode: Ressurs 3 innføres – feltstikkere i rotasjon 14/14 og 360° panorama. Ressurs 2 fokuserer på mengdeberegning.",en:"New period: Resource 3 introduced – field surveyors on a 14/14 rotation and 360° panoramas. Resource 2 focuses on quantity surveying."}},
+  {d:"2026-11-09", t:{no:"I dag – Periode 2 pågår.",en:"Today – Period 2 ongoing."}}
 ];
 
 const I18N = {
@@ -344,33 +344,33 @@ const I18N = {
     roleSel:"Valgt rolle",back:"Vis status for dato",
     removed:"Ikke videreført",legendShared:"Felles tjenester",
     sel:"Klikk på en annen stolpe eller hendelse for å bytte."},
-  pl:{kicker:"OHLA · Tyczenie i pomiary · 2024–2026",title:"Podział zasobów <span class=\"accent\">w czasie</span>",ebTl:"Oś czasu",ebEv:"Zdarzenia",ebCmp:"Okres 1 vs. okres 2",cursor:"Wybrana data",
-    lead:"Jak zmieniała się liczba zasobów (ressurs) i zakres obowiązków każdego z nich. Przeciągnij oś czasu, kliknij rolę lub zdarzenie, aby zobaczyć szczegóły.",
-    tlTitle:"Oś czasu zasobów i ról",scrub:"Wybierz datę",
-    hint:"Wskazówka: kliknij/przeciągnij na osi czasu, aby przesunąć znacznik; kliknij pasek, aby zobaczyć zadania danej roli.",
-    evTitle:"Kluczowe zmiany",evSub:"Kliknij, aby przejść do daty.",
-    cmpTitle:"Porównanie okresów",foot:"Źródło: zestawienie zasobów (arkusz). Usługi wspólne pokazano dla całego okresu, bez przypisania do konkretnego zasobu.",
-    kRes:"Zasoby teraz",kRoles:"Aktywne role",kDuties:"Zadania",kPer:"Okres",of:"z",
-    at:"Stan na",active:"Aktywne zasoby i role",noDuties:"Brak szczegółowej listy zadań w dokumencie źródłowym.",
-    ongoing:"trwa",new:"Nowe",moved:"Przeniesione",ended:"Zakończone",today:"Dziś",
-    roleSel:"Wybrana rola",back:"Pokaż stan na datę",
-    removed:"Nie kontynuowane",legendShared:"Usługi wspólne",
-    sel:"Kliknij inny pasek lub zdarzenie, aby zmienić."}
+  en:{kicker:"OHLA · Setting-out and surveying · 2024–2026",title:"Resource allocation <span class=\"accent\">over time</span>",ebTl:"Timeline",ebEv:"Events",ebCmp:"Period 1 vs. period 2",cursor:"Selected date",
+    lead:"How the number of resources and the responsibilities of each resource have changed over time. Drag the timeline, or click a role or an event for details.",
+    tlTitle:"Timeline of resources and roles",scrub:"Select date",
+    hint:"Tip: click/drag on the timeline to move the marker; click a bar to see the role's tasks.",
+    evTitle:"Key changes",evSub:"Click to jump to the date.",
+    cmpTitle:"Comparison of the periods",foot:"Source: resource overview (spreadsheet). Shared services are shown for the whole period without a fixed resource assignment.",
+    kRes:"Resources now",kRoles:"Active roles",kDuties:"Tasks",kPer:"Period",of:"of",
+    at:"Status as of",active:"Active resources and roles",noDuties:"No detailed task list in the source document.",
+    ongoing:"ongoing",new:"New",moved:"Moved",ended:"Ended",today:"Today",
+    roleSel:"Selected role",back:"Show status for",
+    removed:"Discontinued",legendShared:"Shared services",
+    sel:"Click another bar or event to switch."}
 };
 
 /* ---------------- STATE ---------------- */
 const DAY = 864e5;
 const SPAN = (T1 - T0) / DAY;
 let lang = "no", cur = TODAY, sel = null;
-try { lang = localStorage.getItem("ohla-lang") || "no"; } catch(e){}
+try { lang = localStorage.getItem("ohla-lang") || "no"; if (!I18N[lang]) lang = "no"; } catch(e){}
 
 const $ = s => document.querySelector(s);
 const pct = d => ((d - T0) / DAY) / SPAN * 100;
 const segEnd = s => s.to ? D(s.to) : T1;
-const fmt = d => d.toLocaleDateString(lang === "pl" ? "pl-PL" : "nb-NO", {day:"2-digit",month:"2-digit",year:"numeric"});
+const fmt = d => d.toLocaleDateString("nb-NO", {day:"2-digit",month:"2-digit",year:"numeric"});
 const t = k => I18N[lang][k];
 const resOf = id => RES.find(r => r.id === id);
-const dutyText = (k) => DUTIES[k].map(x => lang === "pl" ? x[1] : x[0]);
+const dutyText = (k) => DUTIES[k].map(x => lang === "en" ? x[1] : x[0]);
 const isActive = (s, d) => d >= D(s.from) && d <= segEnd(s);
 const periodAt = d => PERIODS.find(p => d >= D(p.from) && (!p.to || d <= D(p.to)));
 
@@ -509,7 +509,7 @@ function renderCompare(){
     const list = [];
     LANES.forEach(l => l.seg.forEach(s => { if (s.p === p.id || s.p === "both") list.push({l, s, ended: p.id==="p1" && s.to && D(s.to) < D(p.to)}); }));
     const res = new Set(list.filter(x=>x.l.res!=="sh").map(x=>x.l.res)).size;
-    return `<div><h3><span class="pill ${p.id}">${p.label[lang]}</span> ${res} ${lang==="pl"?"zasoby":"ressurser"}</h3>${groupByRes(list, true)}</div>`;
+    return `<div><h3><span class="pill ${p.id}">${p.label[lang]}</span> ${res} ${lang==="en"?"resources":"ressurser"}</h3>${groupByRes(list, true)}</div>`;
   };
   $("#cmp").innerHTML = PERIODS.map(col).join("");
 }
@@ -532,7 +532,7 @@ function update(){
 }
 
 function applyLang(){
-  document.documentElement.lang = lang === "pl" ? "pl" : "no";
+  document.documentElement.lang = lang === "en" ? "en" : "no";
   document.querySelectorAll("[data-i18n]").forEach(e => e.textContent = t(e.dataset.i18n));
   document.querySelectorAll("[data-i18n-html]").forEach(e => e.innerHTML = t(e.dataset.i18nHtml));
   document.querySelectorAll("[data-lang]").forEach(b => b.setAttribute("aria-pressed", b.dataset.lang === lang));

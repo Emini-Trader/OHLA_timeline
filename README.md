@@ -7,5 +7,5 @@ Otwórz `index.html` w przeglądarce (jeden plik, bez instalacji).
 - Kliknij pasek roli, aby zobaczyć listę obowiązków; kliknij zdarzenie, aby przejść do daty.
 - Porównanie Okresu 1 i Okresu 2, przełącznik języka NO/PL, tryb jasny/ciemny.
 
-Kolory i czcionki są zdefiniowane w bloku `:root` na początku `index.html` – tam można je dopasować do identyfikacji wizualnej.
+Kolory i czcionki pochodzą z identyfikacji NORMA Geosystems (norma-gs.no: antracyt #383E42, żółty #F4BB29, Space Grotesk / Inter / JetBrains Mono) i są zdefiniowane w bloku `:root` na początku `index.html`. Logo w katalogu `assets/`.
 Dane (role, daty, obowiązki) znajdują się w sekcji `DATA` w skrypcie.

@@ -26,7 +26,7 @@
   --font-display:"Space Grotesk",system-ui,sans-serif;
   --font-body:"Inter",system-ui,sans-serif;
   --font-mono:"JetBrains Mono",ui-monospace,monospace;
-  --label-w:230px;
+  --label-w:230px; --tl-minw:960px;
 }
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
@@ -93,7 +93,7 @@ button{font:inherit;cursor:pointer;color:inherit}
 .legend b{width:12px;height:12px;display:inline-block}
 .tl{padding:20px 0 8px}
 .scroll{overflow-x:auto;padding:0 20px 6px}
-.grid{min-width:960px;display:grid;grid-template-columns:var(--label-w) 1fr;position:relative}
+.grid{min-width:var(--tl-minw);display:grid;grid-template-columns:var(--label-w) 1fr;position:relative}
 .lab{padding:0 12px 0 0;display:flex;align-items:center;font-size:13.5px;min-height:34px;position:sticky;left:0;background:var(--surface);z-index:3}
 .track{position:relative;min-height:34px;border-left:1px solid var(--line)}
 .lab.row-sep,.track.row-sep{border-top:1px solid var(--line)}
@@ -123,7 +123,7 @@ button{font:inherit;cursor:pointer;color:inherit}
 .cursor{position:absolute;top:0;bottom:0;width:2px;background:var(--yellow);z-index:4;pointer-events:none}
 .cursor::before{content:"";position:absolute;top:-5px;left:-5px;width:12px;height:12px;background:var(--yellow);box-shadow:0 0 0 3px var(--surface)}
 .overlay{position:absolute;inset:0;pointer-events:none}
-.scrub{display:grid;grid-template-columns:var(--label-w) 1fr;min-width:960px;align-items:center;margin-top:8px}
+.scrub{display:grid;grid-template-columns:var(--label-w) 1fr;min-width:var(--tl-minw);align-items:center;margin-top:8px}
 .scrub label{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);position:sticky;left:0;background:var(--surface)}
 input[type=range]{width:100%;accent-color:var(--yellow-deep);margin:0}
 .hint{font-size:12.5px;color:var(--muted);padding:8px 20px 10px}
@@ -170,6 +170,28 @@ input[type=range]{width:100%;accent-color:var(--yellow-deep);margin:0}
 .cmp .role{padding:9px 12px}
 .cmp .role-t{font-size:14px}
 
+/* ---------- Desktop layout: events in hero, status in sticky sidebar ---------- */
+.hero-side,.col-side{display:none}
+@media (min-width:1100px){
+  .wrap{max-width:1520px}
+  .hero-grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(360px,1fr);gap:48px;align-items:start}
+  .hero-side{display:block;padding-bottom:40px}
+  .hero-side .panel{background:var(--anthracite-2);border:1px solid rgba(255,255,255,.1);color:#fff}
+  .hero-side .panel .sub{color:rgba(255,255,255,.55)}
+  .hero-side .eyebrow{color:var(--yellow)}
+  .hero-side .events::before{background:rgba(255,255,255,.15)}
+  .hero-side .events li::before{background:var(--anthracite-2);border-color:var(--yellow)}
+  .hero-side .events li.act::before{background:var(--yellow)}
+  .hero-side .events .d,.hero-side .events button:hover .t{color:var(--yellow)}
+  .layout{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:32px;max-width:1520px;margin:0 auto;padding:0 clamp(16px,4vw,56px);align-items:start;
+    --label-w:190px;--tl-minw:720px}
+  .layout .wrap{padding:0;max-width:none}
+  .lower-sec{display:none}
+  .col-side{display:block;position:sticky;top:96px;margin:56px 0;max-height:calc(100vh - 120px);overflow:auto;overscroll-behavior:contain}
+  .col-side .panel{border-top:3px solid var(--yellow)}
+  .layout .cmp>div{padding:0}
+}
+
 footer{background:var(--anthracite-3);color:rgba(255,255,255,.55);font-size:12.5px}
 footer .wrap{display:flex;gap:20px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding-top:28px;padding-bottom:28px}
 footer img{height:34px;width:auto}
@@ -205,14 +227,18 @@ footer img{height:34px;width:auto}
   </div>
 </div></header>
 
-<section class="hero"><div class="wrap">
-  <div class="badge-live" data-i18n="kicker"></div>
-  <h1 data-i18n-html="title"></h1>
-  <p data-i18n="lead"></p>
-  <div class="kpis" id="kpis"></div>
+<section class="hero"><div class="wrap hero-grid">
+  <div class="hero-main">
+    <div class="badge-live" data-i18n="kicker"></div>
+    <h1 data-i18n-html="title"></h1>
+    <p data-i18n="lead"></p>
+    <div class="kpis" id="kpis"></div>
+  </div>
+  <div class="hero-side" id="slot-ev"></div>
 </div></section>
 
-<main>
+<main class="layout">
+ <div class="col-main">
   <section class="section"><div class="wrap">
     <div class="tl-head">
       <div><div class="eyebrow" data-i18n="ebTl"></div><h2 class="sec-title" data-i18n="tlTitle"></h2></div>
@@ -230,10 +256,10 @@ footer img{height:34px;width:auto}
     </div>
   </div></section>
 
-  <section class="section gray"><div class="wrap">
-    <div class="lower">
+  <section class="section gray lower-sec"><div class="wrap">
+    <div class="lower" id="lower">
       <section class="card panel" id="detail" aria-live="polite"></section>
-      <section class="card panel">
+      <section class="card panel" id="evPanel">
         <div class="eyebrow" data-i18n="ebEv"></div>
         <h2 data-i18n="evTitle"></h2>
         <div class="sub" data-i18n="evSub"></div>
@@ -247,6 +273,8 @@ footer img{height:34px;width:auto}
     <h2 class="sec-title" style="margin-bottom:28px" data-i18n="cmpTitle"></h2>
     <div class="cmp" id="cmp"></div>
   </div></section>
+ </div>
+ <aside class="col-side" id="slot-detail"></aside>
 </main>
 <footer><div class="wrap">
   <img src="assets/norma-logo-light.png" alt="Norma Geosystems" width="222" height="44" loading="lazy">
@@ -552,6 +580,13 @@ document.querySelectorAll("[data-th]").forEach(b => b.onclick = () => {
   else delete document.documentElement.dataset.theme;
 });
 applyLang();
+/* Desktop: events -> hero, status -> sidebar. Mobile: both back to the gray section. */
+const mq = matchMedia("(min-width:1100px)");
+function place(){
+  if (mq.matches){ $("#slot-ev").append($("#evPanel")); $("#slot-detail").append($("#detail")); }
+  else { $("#lower").append($("#detail"), $("#evPanel")); }
+}
+mq.addEventListener("change", place); place();
 // scroll timeline so "today" is visible on narrow screens
 requestAnimationFrame(() => { const sc = $("#scroll"); sc.scrollLeft = sc.scrollWidth; });
 </script>

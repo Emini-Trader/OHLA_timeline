@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/okonomi.css">
+<link rel="stylesheet" href="css/team.css">
 <style>
 /* ==========================================================
    DESIGN TOKENS – NORMA Geosystems palette (norma-gs.no/styles.css)
@@ -66,7 +67,7 @@ button{font:inherit;cursor:pointer;color:inherit}
 .tabs a:focus-visible{outline:2px solid #D9A21A;outline-offset:-4px}
 .hsep{width:1px;height:28px;background:#E5E5E5;margin:0 4px}
 [role="tabpanel"][hidden]{display:none}
-body:not([data-view="okonomi"]) .foot-fin,body[data-view="okonomi"] .foot-res{display:none}
+body:not([data-view="okonomi"]) .foot-fin,body:not([data-view="teamstruktur"]) .foot-team,body[data-view="okonomi"] .foot-res,body[data-view="teamstruktur"] .foot-res{display:none}
 
 /* Hero */
 .hero{background:var(--anthracite);color:#fff;position:relative;overflow:hidden}
@@ -238,6 +239,7 @@ footer img{height:34px;width:auto}
   <nav class="tabs" role="tablist" data-i18n-aria="tabsLabel" aria-label="Seksjoner">
     <a role="tab" id="tab-res" href="#ressurser" aria-controls="view-ressurser" aria-selected="true" data-i18n="tabRes">Ressurser</a>
     <a role="tab" id="tab-fin" href="#okonomi" aria-controls="view-okonomi" aria-selected="false" tabindex="-1" data-i18n="tabFin">Økonomi</a>
+    <a role="tab" id="tab-team" href="#teamstruktur" aria-controls="view-team" aria-selected="false" tabindex="-1" data-i18n="tabTeam">Teamstruktur</a>
   </nav>
   <span class="hsep" aria-hidden="true"></span>
   <div class="seg" role="group" aria-label="Language">
@@ -300,10 +302,12 @@ footer img{height:34px;width:auto}
 </main>
 </div>
 <div id="view-okonomi" role="tabpanel" aria-labelledby="tab-fin" hidden></div>
+<div id="view-team" role="tabpanel" aria-labelledby="tab-team" hidden></div>
 <footer><div class="wrap">
   <img src="assets/norma-logo-light.png" alt="Norma Geosystems" width="222" height="44" loading="lazy">
   <span class="foot-res" data-i18n="foot"></span>
   <span class="foot-fin" data-i18n="footFin"></span>
+  <span class="foot-team" data-i18n="footTeam"></span>
 </div></footer>
 
 <script>
@@ -385,7 +389,7 @@ const EVENTS = [
 ];
 
 const I18N = {
-  no:{tabRes:"Ressurser",tabFin:"Økonomi",tabsLabel:"Seksjoner",footFin:"Kilder: FINANCIAL ANALYSIS.xlsx og Kalkulacja zysku projektowego.xlsx. Økonomidata vises kun etter innlogging.",kicker:"OHLA · Stikning og oppmåling · 2024–2026",title:"Ressursfordeling <span class=\"accent\">over tid</span>",ebTl:"Tidslinje",ebEv:"Hendelser",ebCmp:"Periode 1 vs. periode 2",cursor:"Valgt dato",
+  no:{tabRes:"Ressurser",tabFin:"Økonomi",tabTeam:"Teamstruktur",footTeam:"Kilder: NORMA_struktura-survey team.xlsx og organisasjonsrapport. Ressursandeler er ikke summert til antall personer.",tabsLabel:"Seksjoner",footFin:"Kilder: FINANCIAL ANALYSIS.xlsx og Kalkulacja zysku projektowego.xlsx. Økonomidata vises kun etter innlogging.",kicker:"OHLA · Stikning og oppmåling · 2024–2026",title:"Ressursfordeling <span class=\"accent\">over tid</span>",ebTl:"Tidslinje",ebEv:"Hendelser",ebCmp:"Periode 1 vs. periode 2",cursor:"Valgt dato",
     lead:"Hvordan antall ressurser og ansvarsområdene til hver ressurs har endret seg over tid. Dra i tidslinjen, klikk på en rolle eller en hendelse for detaljer.",
     tlTitle:"Tidslinje for ressurser og roller",scrub:"Velg dato",
     hint:"Tips: klikk/dra i tidslinjen for å flytte markøren, klikk på en stolpe for å se oppgavene til rollen.",
@@ -397,7 +401,7 @@ const I18N = {
     roleSel:"Valgt rolle",back:"Vis status for dato",
     removed:"Ikke videreført",legendShared:"Felles tjenester",
     sel:"Klikk på en annen stolpe eller hendelse for å bytte."},
-  en:{tabRes:"Resources",tabFin:"Financials",tabsLabel:"Sections",footFin:"Sources: FINANCIAL ANALYSIS.xlsx and Kalkulacja zysku projektowego.xlsx. Financial data is shown only after sign-in.",kicker:"OHLA · Setting-out and surveying · 2024–2026",title:"Resource allocation <span class=\"accent\">over time</span>",ebTl:"Timeline",ebEv:"Events",ebCmp:"Period 1 vs. period 2",cursor:"Selected date",
+  en:{tabRes:"Resources",tabFin:"Financials",tabTeam:"Team Structure",footTeam:"Sources: NORMA_struktura-survey team.xlsx and organizational report. Resource allocations are not summed into a headcount.",tabsLabel:"Sections",footFin:"Sources: FINANCIAL ANALYSIS.xlsx and Kalkulacja zysku projektowego.xlsx. Financial data is shown only after sign-in.",kicker:"OHLA · Setting-out and surveying · 2024–2026",title:"Resource allocation <span class=\"accent\">over time</span>",ebTl:"Timeline",ebEv:"Events",ebCmp:"Period 1 vs. period 2",cursor:"Selected date",
     lead:"How the number of resources and the responsibilities of each resource have changed over time. Drag the timeline, or click a role or an event for details.",
     tlTitle:"Timeline of resources and roles",scrub:"Select date",
     hint:"Tip: click/drag on the timeline to move the marker; click a bar to see the role's tasks.",
@@ -619,10 +623,10 @@ requestAnimationFrame(() => { const sc = $("#scroll"); sc.scrollLeft = sc.scroll
 
 /* ---------------- VIEWS (header tabs, hash routing: #ressurser | #okonomi) ---------------- */
 window.OHLA = { get lang(){ return lang; } };
-const VIEWS = { ressurser: "view-ressurser", okonomi: "view-okonomi" };
+const VIEWS = { ressurser: "view-ressurser", okonomi: "view-okonomi", teamstruktur: "view-team" };
 const tabs = [...document.querySelectorAll('.tabs [role="tab"]')];
-let finModule = null;
-function viewFromHash(){ return location.hash === "#okonomi" ? "okonomi" : "ressurser"; }
+let finModule = null, teamModule = null;
+function viewFromHash(){ const h = location.hash.slice(1); return Object.hasOwn(VIEWS, h) ? h : "ressurser"; }
 function showView(v, opts = {}){
   const prev = document.body.dataset.view;
   document.body.dataset.view = v;
@@ -632,7 +636,10 @@ function showView(v, opts = {}){
   if (v === "okonomi"){
     (finModule ||= import("./js/okonomi.mjs")).then(m => m.show(document.getElementById("view-okonomi")))
       .catch(err => { console.error(err); document.getElementById("view-okonomi").textContent = "Error loading module."; });
-  } else if (prev === "okonomi"){
+  } else if (v === "teamstruktur"){
+    (teamModule ||= import("./js/team.mjs")).then(m => m.show(document.getElementById("view-team")))
+      .catch(err => { console.error(err); document.getElementById("view-team").textContent = "Error loading module."; });
+  } else if (prev && prev !== "ressurser"){
     requestAnimationFrame(place);
   }
 }

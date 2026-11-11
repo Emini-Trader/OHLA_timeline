@@ -6,6 +6,7 @@ Aplikacja ma dwie zakładki w nagłówku:
 |---|---|---|
 | **Ressurser / Resources** | oś czasu zasobów (domyślna) | `/` lub `/#ressurser` |
 | **Økonomi / Financials** | dashboard finansowy i kalkulator rentowności projektu | `/#okonomi` |
+| **Teamstruktur / Team Structure** | organizacja zespołu pomiarowego, rozwój, współpraca, ciągłość | `/#teamstruktur` |
 
 Zakładki, przełącznik języka NO/EN i motyw jasny/ciemny tworzą jedną grupę kontrolek w istniejącym nagłówku.
 
@@ -18,6 +19,9 @@ public/                 ← jedyny katalog serwowany publicznie (vercel.json →
   js/okonomi.mjs        UI: logowanie, dashboard, wykresy SVG, kalkulator, teksty NO/EN
   js/finance/calc.mjs   czyste funkcje obliczeniowe (bez danych, bez DOM)
   js/finance/schema.mjs walidacja struktury danych
+  js/team.mjs           UI zakładki Teamstruktur (diagram SVG, etapy, współpraca, ciągłość)
+  js/team/team-data.mjs dane struktury zespołu z odwołaniami do komórek arkusza
+  css/team.css          style zakładki Teamstruktur
 api/                    funkcje serwerowe Vercel (Node)
   financials.js         GET  – dane tylko po zalogowaniu
   login.js / logout.js  POST – sesja w ciasteczku HttpOnly
@@ -90,3 +94,20 @@ Lokalnie przez `http://` serwer deweloperski używa ciasteczka bez flagi `Secure
   7. Koszt personelu to suma po pracownikach (każdy z własną pensją). Godziny fakturowane są podawane łącznie dla projektu, więc rotacja 14/14 nie podwaja godzin.
 - **Feriepenger:** metoda arkusza dolicza 10,2% do pełnej pensji za 12 miesięcy. Jeśli roczna kwota już zawiera feriepenger, zaznacz opcję „Årslønn inkluderer feriepenger”, a kalkulator rozdzieli kwotę zamiast doliczać (bez podwójnego liczenia).
 - Wynik projektu nie obejmuje kosztów ogólnych spółki ani podatku, więc nie jest zyskiem netto.
+
+## Teamstruktur – źródła i interpretacja
+
+Dane pochodzą z `NORMA_struktura-survey team.xlsx` (arkusz `Ark1`; diagram narysowany scalonymi komórkami i obramowaniami) oraz z raportu organizacyjnego. Każda rola i organizacja ma w `team-data.mjs` zakres komórek i oryginalną etykietę. Sekcja jest publiczna jak zakładka Ressurser: zawiera role i udziały zasobów, bez danych finansowych.
+
+- **Obecny zespół NORMA:** Lead Surveyor 100%, Quantity Surveyor/GK 50%, dwie zmiany dzienne po 75%. Udziały nie są sumowane do liczby osób.
+- **Plany:**
+  - tunel (`(tunnel) FIELDWORK 100%`, L24) jest pokazany jako *planowany*, zgodnie z raportem (jaśniejsze wypełnienie w arkuszu);
+  - szare komórki Q12:Q14 i Q16:Q18 oznaczają planowany wzrost zmian dziennych z 75% do 100%.
+- **METROSTAV** to zewnętrzny partner, a nie zasób NORMA. Etykieta „METROSTAV 100%” jest zachowana tylko jako źródło.
+- **Linie bez legendy w arkuszu**, interpretacja:
+  - czarne – relacje organizacyjne;
+  - czerwone – wymiana danych przez Trimble Connect;
+  - zielone – dane z terenu do Quantity Surveyor;
+  - jedna linia od Trimble Connect kończy się przy połączeniu SVV–biuro i **nie** jest interpretowana jako korzystanie z platformy przez SVV.
+- Źródła nie podają dat ani nazw trzech środowisk obliczeniowych, dlatego nie są pokazane.
+- Obowiązki pracowników terenowych pochodzą z zestawienia zasobów (zakładka Ressurser).

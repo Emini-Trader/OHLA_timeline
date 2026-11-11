@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/okonomi.css">
 <style>
 /* ==========================================================
    DESIGN TOKENS – NORMA Geosystems palette (norma-gs.no/styles.css)
@@ -57,6 +58,15 @@ button{font:inherit;cursor:pointer;color:inherit}
 .seg button+button{border-left:1.5px solid #383E42}
 .seg button[aria-pressed="true"]{background:#383E42;color:#fff}
 .seg button:hover:not([aria-pressed="true"]){background:rgba(244,187,41,.25)}
+/* Section tabs – part of the header control group */
+.tabs{display:flex;align-self:stretch;gap:2px}
+.tabs a{display:flex;align-items:center;padding:0 12px;font-family:var(--font-display);font-weight:500;font-size:14px;letter-spacing:.02em;color:#383E42;text-decoration:none;border-bottom:2px solid transparent;border-top:2px solid transparent;white-space:nowrap}
+.tabs a:hover{color:#D9A21A}
+.tabs a[aria-selected="true"]{font-weight:600;border-bottom-color:#F4BB29}
+.tabs a:focus-visible{outline:2px solid #D9A21A;outline-offset:-4px}
+.hsep{width:1px;height:28px;background:#E5E5E5;margin:0 4px}
+[role="tabpanel"][hidden]{display:none}
+body:not([data-view="okonomi"]) .foot-fin,body[data-view="okonomi"] .foot-res{display:none}
 
 /* Hero */
 .hero{background:var(--anthracite);color:#fff;position:relative;overflow:hidden}
@@ -203,6 +213,12 @@ footer img{height:34px;width:auto}
   .lower,.cmp{grid-template-columns:1fr}
   :root{--label-w:170px}
 }
+@media (max-width:640px){
+  .nav .wrap{flex-wrap:wrap;height:auto;padding-top:10px;row-gap:8px}
+  .tabs{order:3;width:100%;border-top:1px solid #E5E5E5;margin:0 calc(-1 * clamp(16px,4vw,56px));padding:0 clamp(16px,4vw,56px);width:calc(100% + 2 * clamp(16px,4vw,56px))}
+  .tabs a{flex:1;justify-content:center;height:42px}
+  .hsep{display:none}
+}
 @media (max-width:520px){
   .nav img{height:30px}
   .nav .wrap{gap:8px}
@@ -219,6 +235,11 @@ footer img{height:34px;width:auto}
 <header class="nav"><div class="wrap">
   <img src="assets/norma-logo.png" alt="Norma Geosystems" width="221" height="44">
   <div class="sp"></div>
+  <nav class="tabs" role="tablist" data-i18n-aria="tabsLabel" aria-label="Seksjoner">
+    <a role="tab" id="tab-res" href="#ressurser" aria-controls="view-ressurser" aria-selected="true" data-i18n="tabRes">Ressurser</a>
+    <a role="tab" id="tab-fin" href="#okonomi" aria-controls="view-okonomi" aria-selected="false" tabindex="-1" data-i18n="tabFin">Økonomi</a>
+  </nav>
+  <span class="hsep" aria-hidden="true"></span>
   <div class="seg" role="group" aria-label="Language">
     <button data-lang="no" aria-pressed="true">NO</button><button data-lang="en" aria-pressed="false">EN</button>
   </div>
@@ -227,6 +248,7 @@ footer img{height:34px;width:auto}
   </div>
 </div></header>
 
+<div id="view-ressurser" role="tabpanel" aria-labelledby="tab-res">
 <section class="hero"><div class="wrap hero-grid">
   <div class="hero-main">
     <div class="badge-live" data-i18n="kicker"></div>
@@ -276,9 +298,12 @@ footer img{height:34px;width:auto}
  </div>
  <aside class="col-side" id="slot-detail"></aside>
 </main>
+</div>
+<div id="view-okonomi" role="tabpanel" aria-labelledby="tab-fin" hidden></div>
 <footer><div class="wrap">
   <img src="assets/norma-logo-light.png" alt="Norma Geosystems" width="222" height="44" loading="lazy">
-  <span data-i18n="foot"></span>
+  <span class="foot-res" data-i18n="foot"></span>
+  <span class="foot-fin" data-i18n="footFin"></span>
 </div></footer>
 
 <script>
@@ -360,7 +385,7 @@ const EVENTS = [
 ];
 
 const I18N = {
-  no:{kicker:"OHLA · Stikning og oppmåling · 2024–2026",title:"Ressursfordeling <span class=\"accent\">over tid</span>",ebTl:"Tidslinje",ebEv:"Hendelser",ebCmp:"Periode 1 vs. periode 2",cursor:"Valgt dato",
+  no:{tabRes:"Ressurser",tabFin:"Økonomi",tabsLabel:"Seksjoner",footFin:"Kilder: FINANCIAL ANALYSIS.xlsx og Kalkulacja zysku projektowego.xlsx. Økonomidata vises kun etter innlogging.",kicker:"OHLA · Stikning og oppmåling · 2024–2026",title:"Ressursfordeling <span class=\"accent\">over tid</span>",ebTl:"Tidslinje",ebEv:"Hendelser",ebCmp:"Periode 1 vs. periode 2",cursor:"Valgt dato",
     lead:"Hvordan antall ressurser og ansvarsområdene til hver ressurs har endret seg over tid. Dra i tidslinjen, klikk på en rolle eller en hendelse for detaljer.",
     tlTitle:"Tidslinje for ressurser og roller",scrub:"Velg dato",
     hint:"Tips: klikk/dra i tidslinjen for å flytte markøren, klikk på en stolpe for å se oppgavene til rollen.",
@@ -372,7 +397,7 @@ const I18N = {
     roleSel:"Valgt rolle",back:"Vis status for dato",
     removed:"Ikke videreført",legendShared:"Felles tjenester",
     sel:"Klikk på en annen stolpe eller hendelse for å bytte."},
-  en:{kicker:"OHLA · Setting-out and surveying · 2024–2026",title:"Resource allocation <span class=\"accent\">over time</span>",ebTl:"Timeline",ebEv:"Events",ebCmp:"Period 1 vs. period 2",cursor:"Selected date",
+  en:{tabRes:"Resources",tabFin:"Financials",tabsLabel:"Sections",footFin:"Sources: FINANCIAL ANALYSIS.xlsx and Kalkulacja zysku projektowego.xlsx. Financial data is shown only after sign-in.",kicker:"OHLA · Setting-out and surveying · 2024–2026",title:"Resource allocation <span class=\"accent\">over time</span>",ebTl:"Timeline",ebEv:"Events",ebCmp:"Period 1 vs. period 2",cursor:"Selected date",
     lead:"How the number of resources and the responsibilities of each resource have changed over time. Drag the timeline, or click a role or an event for details.",
     tlTitle:"Timeline of resources and roles",scrub:"Select date",
     hint:"Tip: click/drag on the timeline to move the marker; click a bar to see the role's tasks.",
@@ -563,8 +588,10 @@ function applyLang(){
   document.documentElement.lang = lang === "en" ? "en" : "no";
   document.querySelectorAll("[data-i18n]").forEach(e => e.textContent = t(e.dataset.i18n));
   document.querySelectorAll("[data-i18n-html]").forEach(e => e.innerHTML = t(e.dataset.i18nHtml));
+  document.querySelectorAll("[data-i18n-aria]").forEach(e => e.setAttribute("aria-label", t(e.dataset.i18nAria)));
   document.querySelectorAll("[data-lang]").forEach(b => b.setAttribute("aria-pressed", b.dataset.lang === lang));
   buildGrid(); renderLegend(); renderCompare(); update();
+  document.dispatchEvent(new CustomEvent("ohla:lang", { detail: { lang } }));
 }
 
 /* ---------------- INIT ---------------- */
@@ -589,6 +616,35 @@ function place(){
 mq.addEventListener("change", place); place();
 // scroll timeline so "today" is visible on narrow screens
 requestAnimationFrame(() => { const sc = $("#scroll"); sc.scrollLeft = sc.scrollWidth; });
+
+/* ---------------- VIEWS (header tabs, hash routing: #ressurser | #okonomi) ---------------- */
+window.OHLA = { get lang(){ return lang; } };
+const VIEWS = { ressurser: "view-ressurser", okonomi: "view-okonomi" };
+const tabs = [...document.querySelectorAll('.tabs [role="tab"]')];
+let finModule = null;
+function viewFromHash(){ return location.hash === "#okonomi" ? "okonomi" : "ressurser"; }
+function showView(v, opts = {}){
+  const prev = document.body.dataset.view;
+  document.body.dataset.view = v;
+  for (const [k, id] of Object.entries(VIEWS)) document.getElementById(id).hidden = k !== v;
+  tabs.forEach(tab => { const on = tab.getAttribute("href") === "#" + v; tab.setAttribute("aria-selected", on); tab.tabIndex = on ? 0 : -1; });
+  if (prev && prev !== v && !opts.initial) window.scrollTo(0, 0);
+  if (v === "okonomi"){
+    (finModule ||= import("./js/okonomi.mjs")).then(m => m.show(document.getElementById("view-okonomi")))
+      .catch(err => { console.error(err); document.getElementById("view-okonomi").textContent = "Error loading module."; });
+  } else if (prev === "okonomi"){
+    requestAnimationFrame(place);
+  }
+}
+window.addEventListener("hashchange", () => showView(viewFromHash()));
+tabs.forEach((tab, i) => tab.addEventListener("keydown", e => {
+  const d = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
+  if (!d) return;
+  e.preventDefault();
+  const next = tabs[(i + d + tabs.length) % tabs.length];
+  next.focus(); location.hash = next.getAttribute("href");
+}));
+showView(viewFromHash(), { initial: true });
 </script>
 </body>
 </html>

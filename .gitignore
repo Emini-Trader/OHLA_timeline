@@ -1,0 +1,11 @@
+# Confidential source workbooks and extracted data must never be committed (public repository).
+*.xlsx
+*.xls
+*.xlsm
+*.b64
+financials*.json
+data/
+.env*
+test/fixtures/*.local.json
+node_modules/
+.vercel/

@@ -38,6 +38,9 @@ const STR = {
     bBadgeModel: "Modell – ikke regnskap", bBadgeAssump: "Referansesatser = antakelser i arbeidsboken",
     bNorma: "NORMA-modell per måned", bRef: "Referansemodell per måned", bDiff: "Differanse per måned", bDiffPct: "Differanse i % av referanse",
     chartRates: "Månedsbeløp per tjeneste (sats × timer)", legNorma: "NORMA-sats", legRef: "Referansesats",
+    refEditHint: "Referansesatsene kan endres direkte i tabellen for å vurdere andre satser. Endringene er et midlertidig scenario og påvirker ikke arbeidsboken.",
+    refEdited: "Endrede referansesatser – scenario, ikke arbeidsbokens verdier", resetRates: "Tilbakestill til arbeidsboken", wbValue: "arbeidsbok",
+    bRefEdited: "Referansemodell per måned (justert)",
     service: "Tjeneste", contract: "Kontrakt", normaRate: "NORMA-sats", refRate: "Referansesats", hours: "Timer/mnd",
     normaAmt: "NORMA-beløp", refAmt: "Referansebeløp", diff: "Differanse",
     method: "Metode", methodText: "For hver tjeneste beregnes månedsbeløp = timepris × antall timer. Arbeidsboken bruker 165 timer per måned for hver av de fire hovedtjenestene, 80 timer for geometrisk monitorering og 20 timer for prosjekteringsstøtte. Kolonnen «MARKED» i arbeidsboken er her kalt referansesats: det er antakelser lagt inn i arbeidsboken, ikke uavhengig verifiserte norske markedssnitt. Alle beløp i NOK eks. mva.",
@@ -100,6 +103,9 @@ const STR = {
     bBadgeModel: "Model – not accounting", bBadgeAssump: "Reference rates = workbook assumptions",
     bNorma: "NORMA model per month", bRef: "Reference model per month", bDiff: "Difference per month", bDiffPct: "Difference as % of reference",
     chartRates: "Monthly amount per service (rate × hours)", legNorma: "NORMA rate", legRef: "Reference rate",
+    refEditHint: "The reference rates can be edited directly in the table to discuss other rates. Changes are a temporary scenario and do not affect the workbook.",
+    refEdited: "Reference rates edited – scenario, not the workbook values", resetRates: "Reset to workbook", wbValue: "workbook",
+    bRefEdited: "Reference model per month (adjusted)",
     service: "Service", contract: "Contract", normaRate: "NORMA rate", refRate: "Reference rate", hours: "Hours/mo",
     normaAmt: "NORMA amount", refAmt: "Reference amount", diff: "Difference",
     method: "Method", methodText: "For each service, monthly amount = hourly rate × hours. The workbook uses 165 hours per month for each of the four main services, 80 hours for geometric monitoring and 20 hours for design support. The workbook column “MARKED” is called the reference rate here: these are assumptions entered in the workbook, not independently verified Norwegian market averages. All amounts in NOK excl. VAT.",
@@ -160,6 +166,7 @@ const state = {
   error: null, loginError: null, busy: false,
   data: null, authRequired: false,
   presetId: "blank", calc: blankInput(), reductionPct: 20,
+  refRates: {}, // temporary reference-rate overrides (section B), never written back to the data
 };
 
 function blankInput() {
@@ -243,7 +250,7 @@ async function login(password) {
 async function logout() {
   try { await fetch("/api/logout", { method: "POST", credentials: "same-origin" }); } catch { /* ignore */ }
   // Drop confidential data from memory.
-  state.data = null; state.presetId = "blank"; state.calc = blankInput(); state.status = "idle";
+  state.data = null; state.presetId = "blank"; state.calc = blankInput(); state.refRates = {}; state.status = "idle";
   load();
 }
 
@@ -268,7 +275,7 @@ function render() {
   try {
     const d = state.data;
     const acc = summarizeAccounting(d.accounting);
-    const rm = summarizeRateModel(d.rateModel);
+    const rm = summarizeRateModel(effectiveRateModel());
     root.innerHTML = hero(acc) + `<div class="fin">${sectionA(acc)}${sectionB(rm, acc)}${sectionC()}</div>`;
     bindDashboard();
     bindCalculator();
@@ -396,22 +403,23 @@ function sectionB(rm, acc) {
   const rows = rm.rows.map(r => `<tr>
       <th scope="row">${esc(svc(r))}<span class="src">${esc(r.label)}</span></th>
       <td>${esc(t.contractNames[r.contract] || r.contract || "–")}</td>
-      <td class="num">${esc(fmt(r.normaRate))}</td><td class="num">${esc(fmt(r.referenceRate))}</td><td class="num">${esc(fmt(r.hours))}</td>
-      <td class="num">${esc(fmt(r.normaAmount))}</td><td class="num">${esc(fmt(r.referenceAmount))}</td><td class="num">${esc(fmt(r.difference))}</td>
+      <td class="num">${esc(fmt(r.normaRate))}</td>
+      <td class="num fin-rate-cell"><input type="number" class="fin-rate-input" inputmode="decimal" min="0" step="any"
+        data-ref-rate="${esc(r.id)}" value="${esc(r.referenceRate)}" aria-label="${esc(t.refRate)} – ${esc(svc(r))}">
+        <span class="src" data-rm-orig="${esc(r.id)}"></span></td>
+      <td class="num">${esc(fmt(r.hours))}</td>
+      <td class="num">${esc(fmt(r.normaAmount))}</td><td class="num" data-rm-ref="${esc(r.id)}">${esc(fmt(r.referenceAmount))}</td><td class="num" data-rm-diff="${esc(r.id)}">${esc(fmt(r.difference))}</td>
     </tr>`).join("");
   return `<section class="section gray" aria-labelledby="fin-b-title"><div class="wrap">
     <div class="eyebrow">${esc(t.bEb)}</div>
     <h2 class="sec-title" id="fin-b-title">${esc(t.bTitle)}</h2>
     <div class="fin-badges"><span class="fin-tag">${esc(t.bBadgeModel)}</span><span class="fin-tag">${esc(t.bBadgeAssump)}</span></div>
-    <div class="fin-stats">
-      ${stat(t.bNorma, nok(rm.norma))}${stat(t.bRef, nok(rm.reference))}
-      ${stat(t.bDiff, nok(rm.difference))}${stat(t.bDiffPct, pct(rm.differencePctOfReference, 1))}
-    </div>
+    <div class="fin-stats" data-rm-stats>${rmStats(rm)}</div>
     <div class="fin-b-grid">
       <figure class="card fin-chart">
         <figcaption>${esc(t.chartRates)}</figcaption>
         <div class="fin-legend"><span><b class="sw sw-a"></b>${esc(t.legNorma)}</span><span><b class="sw sw-b"></b>${esc(t.legRef)}</span></div>
-        ${chartPairedH(rm.rows.map(r => ({ label: svc(r), a: r.normaAmount, b: r.referenceAmount })))}
+        <div data-rm-chart>${rmChart(rm)}</div>
       </figure>
       <div class="card fin-method">
         <h3>${esc(t.method)}</h3>
@@ -424,14 +432,49 @@ function sectionB(rm, acc) {
         <p class="fin-muted">${esc(t.invoiceNote)}</p>
       </div>
     </div>
-    <div class="fin-table-wrap card"><table class="fin-table">
+    <p class="fin-hint fin-rate-hint">${esc(t.refEditHint)}</p>
+    <div class="fin-rate-edited" data-rm-edited hidden><span>${esc(t.refEdited)}</span><button type="button" class="fin-add" data-rm-reset>${esc(t.resetRates)}</button></div>
+    <div class="fin-table-wrap card fin-rate-table"><table class="fin-table">
       <thead><tr><th scope="col">${esc(t.service)}</th><th scope="col">${esc(t.contract)}</th><th scope="col" class="num">${esc(t.normaRate)}</th><th scope="col" class="num">${esc(t.refRate)}</th><th scope="col" class="num">${esc(t.hours)}</th><th scope="col" class="num">${esc(t.normaAmt)}</th><th scope="col" class="num">${esc(t.refAmt)}</th><th scope="col" class="num">${esc(t.diff)}</th></tr></thead>
-      <tbody>${rows}<tr class="fin-row-strong"><th scope="row">${esc(t.total)}</th><td></td><td></td><td></td><td></td><td class="num">${esc(fmt(rm.norma))}</td><td class="num">${esc(fmt(rm.reference))}</td><td class="num">${esc(fmt(rm.difference))}</td></tr></tbody>
+      <tbody>${rows}<tr class="fin-row-strong"><th scope="row">${esc(t.total)}</th><td></td><td></td><td></td><td></td><td class="num">${esc(fmt(rm.norma))}</td><td class="num" data-rm-total-ref>${esc(fmt(rm.reference))}</td><td class="num" data-rm-total-diff>${esc(fmt(rm.difference))}</td></tr></tbody>
     </table></div>
   </div></section>`;
 }
 
-const stat = (l, v) => `<div class="card fin-stat"><div class="l">${esc(l)}</div><div class="v">${esc(v)}</div></div>`;
+/* Reference rates: workbook values with temporary overrides from the table. */
+function effectiveRateModel() {
+  const m = state.data.rateModel;
+  return { ...m, items: m.items.map(it => (it.id in state.refRates ? { ...it, referenceRate: state.refRates[it.id] } : it)) };
+}
+const edited = () => Object.keys(state.refRates).length > 0;
+function rmStats(rm) {
+  const t = T();
+  return `${stat(t.bNorma, nok(rm.norma))}${stat(edited() ? t.bRefEdited : t.bRef, nok(rm.reference), edited())}
+    ${stat(t.bDiff, nok(rm.difference), edited())}${stat(t.bDiffPct, pct(rm.differencePctOfReference, 1), edited())}`;
+}
+function rmChart(rm) {
+  const t = T();
+  return chartPairedH(rm.rows.map(r => ({ label: t.services[r.id] || r.label, a: r.normaAmount, b: r.referenceAmount })));
+}
+function updateRateModel() {
+  const t = T();
+  const rm = summarizeRateModel(effectiveRateModel());
+  root.querySelector("[data-rm-stats]").innerHTML = rmStats(rm);
+  root.querySelector("[data-rm-chart]").innerHTML = rmChart(rm);
+  for (const r of rm.rows) {
+    root.querySelector(`[data-rm-ref="${r.id}"]`).textContent = fmt(r.referenceAmount);
+    root.querySelector(`[data-rm-diff="${r.id}"]`).textContent = fmt(r.difference);
+    const orig = state.data.rateModel.items.find(x => x.id === r.id).referenceRate;
+    const changed = r.id in state.refRates;
+    root.querySelector(`[data-ref-rate="${r.id}"]`).classList.toggle("is-edited", changed);
+    root.querySelector(`[data-rm-orig="${r.id}"]`).textContent = changed ? `${t.wbValue}: ${fmt(orig)}` : "";
+  }
+  root.querySelector("[data-rm-total-ref]").textContent = fmt(rm.reference);
+  root.querySelector("[data-rm-total-diff]").textContent = fmt(rm.difference);
+  root.querySelector("[data-rm-edited]").hidden = !edited();
+}
+
+const stat = (l, v, scenario = false) => `<div class="card fin-stat${scenario ? " is-scenario" : ""}"><div class="l">${esc(l)}</div><div class="v">${esc(v)}</div></div>`;
 
 /* ---------------- Section C – calculator ---------------- */
 function sectionC() {
@@ -647,6 +690,22 @@ function renderCalcOutputs() {
 
 function bindDashboard() {
   root.querySelector('[data-act="logout"]')?.addEventListener("click", logout);
+  const table = root.querySelector(".fin-rate-table");
+  table?.addEventListener("input", e => {
+    const id = e.target.dataset?.refRate;
+    if (!id) return;
+    const orig = state.data.rateModel.items.find(x => x.id === id).referenceRate;
+    const raw = e.target.value.trim();
+    const v = raw === "" ? orig : Math.max(0, toNumber(raw));
+    if (v === orig) delete state.refRates[id]; else state.refRates[id] = v;
+    updateRateModel();
+  });
+  root.querySelector("[data-rm-reset]")?.addEventListener("click", () => {
+    state.refRates = {};
+    for (const it of state.data.rateModel.items) root.querySelector(`[data-ref-rate="${it.id}"]`).value = it.referenceRate;
+    updateRateModel();
+  });
+  if (edited()) updateRateModel(); // e.g. after a language switch
 }
 
 /* ------------------------------------------------------------------ */

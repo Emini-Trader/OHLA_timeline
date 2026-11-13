@@ -245,9 +245,10 @@ function diagram() {
     const lab = LABEL_AT[r.id] && t.shortLabels[r.id]
       ? `<text class="e-label" x="${LABEL_AT[r.id][0]}" y="${LABEL_AT[r.id][1]}" text-anchor="${LABEL_AT[r.id][2] || "middle"}">${esc(t.shortLabels[r.id])}</text>` : "";
     return `<g class="edge${planned}" data-from="${r.from}" data-to="${r.to}" data-type="${r.type}">
-      <path class="e-halo" d="${d}"/><path class="e e-${r.type}" d="${d}"><title>${esc(L(r.label))}</title></path>${lab}</g>`;
+      <path class="e-halo" d="${d}"/><path class="e e-${r.type}" d="${d}"${r.oneWay ? ' marker-end="url(#team-arrow-backup)"' : ""}><title>${esc(L(r.label))}</title></path>${lab}</g>`;
   }).join("");
   return `<svg class="team-svg" viewBox="0 0 1120 660" role="group" aria-label="${esc(T().bTitle)}">
+    <defs><marker id="team-arrow-backup" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="arrow-backup"/></marker></defs>
     <rect class="norma-zone" x="280" y="110" width="820" height="440"/>
     <text class="zone-label" x="296" y="540">${esc(t.norma)}</text>
     <text class="e-label e-label-backup" x="660" y="262" text-anchor="start">${esc(t.reserve)}</text>

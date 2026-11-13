@@ -58,6 +58,9 @@ test("backup is temporary coverage from the Lead Surveyor only", () => {
   const backup = RELATIONSHIPS.filter(r => r.type === "backup");
   assert.deepEqual(backup.map(r => r.to).sort(), ["field1", "field2", "metrostav", "tunnel"]);
   assert.ok(backup.every(r => r.from === "lead"));
+  const m = backup.find(r => r.to === "metrostav");
+  assert.equal(m.oneWay, true, "Lead → METROSTAV only");
+  assert.ok(!RELATIONSHIPS.some(r => r.type === "backup" && r.from === "metrostav"), "METROSTAV never backs up the Lead");
   assert.ok(CONTINUITY.points.length >= 4 && CONTINUITY.points.every(bilingual));
 });
 

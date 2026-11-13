@@ -34,6 +34,7 @@
 .e-contract{stroke:var(--muted);stroke-width:1.5}
 .e-data{stroke:var(--c-b);stroke-width:2;stroke-dasharray:.5 5}
 .e-backup{stroke:var(--yellow-deep);stroke-width:2;stroke-dasharray:6 5;stroke-linecap:butt}
+.arrow-backup{fill:var(--yellow-deep)}
 .e-halo{fill:none;stroke:var(--surface);stroke-width:7}
 
 /* Diagram */

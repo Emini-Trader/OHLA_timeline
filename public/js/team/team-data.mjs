@@ -187,10 +187,10 @@ export const RELATIONSHIPS = [
     label: { no: "Midlertidig reserve", en: "Temporary backup" }, source: { ref: "RPT" } },
   { id: "backup-tunnel", from: "lead", to: "tunnel", type: "backup", status: "planned",
     label: { no: "Midlertidig reserve (tunnel)", en: "Temporary backup (tunnel)" }, source: { ref: "RPT" } },
-  { id: "backup-metrostav", from: "lead", to: "metrostav", type: "backup",
-    label: { no: "Reserve", en: "Backup" },
-    note: { no: "Reserveordning mellom NORMAs stikningsleder og METROSTAV. METROSTAV forblir en ekstern samarbeidspartner, ikke en NORMA-ressurs.",
-      en: "Backup arrangement between NORMA's Lead Surveyor and METROSTAV. METROSTAV remains an external collaborator, not a NORMA resource." },
+  { id: "backup-metrostav", from: "lead", to: "metrostav", type: "backup", oneWay: true,
+    label: { no: "Reserve: stikningsleder bistår METROSTAV ved behov", en: "Backup: Lead Surveyor occasionally assists METROSTAV" },
+    note: { no: "Kun én vei – METROSTAV erstatter ikke stikningslederens oppgaver. METROSTAV forblir en ekstern samarbeidspartner, ikke en NORMA-ressurs.",
+      en: "One-way only – METROSTAV does not substitute for the Lead Surveyor's duties. METROSTAV remains an external collaborator, not a NORMA resource." },
     source: { workbook: "not in workbook – added on the owner's instruction", ref: "OWNER" } },
 ];
 
@@ -275,8 +275,8 @@ export const NOTES = [
     en: "“METROSTAV 100%” is kept as a source label but not shown as a NORMA resource; its contractual meaning is not stated." },
   { no: "En linje fra Trimble Connect ender ved forbindelsen SVV–kontor (rad 6). Det er ikke tolket som at SVV bruker plattformen.",
     en: "One line from Trimble Connect ends at the SVV–office connector (row 6). It is not interpreted as SVV using the platform." },
-  { no: "Reservelinjen mellom METROSTAV og stikningsleder finnes ikke i arbeidsboken; den er lagt til etter avklaring med eieren.",
-    en: "The backup line between METROSTAV and the Lead Surveyor is not in the workbook; it was added after clarification with the owner." },
+  { no: "Reservelinjen fra stikningsleder til METROSTAV finnes ikke i arbeidsboken; den er lagt til etter avklaring med eieren. Den gjelder én vei: stikningsleder bistår av og til METROSTAV, mens METROSTAV aldri overtar stikningslederens oppgaver.",
+    en: "The backup line from the Lead Surveyor to METROSTAV is not in the workbook; it was added after clarification with the owner. It is one-way: the Lead Surveyor occasionally assists METROSTAV, while METROSTAV never takes over the Lead Surveyor's duties." },
   { no: "Kildene sier ikke hvilke tre programvaremiljøer som brukes i de uavhengige beregningene; de er derfor ikke navngitt.",
     en: "The sources do not state which three software environments are used for the independent calculations, so they are not named." },
 ];

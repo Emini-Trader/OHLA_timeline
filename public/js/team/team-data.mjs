@@ -197,7 +197,7 @@ export const RELATIONSHIPS = [
 /** Software referenced in the workbook (F5:I19) – grouped by function. */
 export const TOOLS = [
   { id: "gisline", name: "GISLINE", group: "processing",
-    purpose: { no: "Landmålingsberegning og databehandling", en: "Survey calculations and data processing" },
+    purpose: { no: "Fastpunktberegninger", en: "Fixed point calculations" },
     source: { cells: "F5:F19", label: "GISLINE" } },
   { id: "gemini", name: "Gemini", group: "processing",
     purpose: { no: "Landmålingsberegning og databehandling", en: "Survey calculations and data processing" },
@@ -205,6 +205,12 @@ export const TOOLS = [
   { id: "autocad", name: "AutoCAD", group: "processing",
     purpose: { no: "CAD og tegningsgrunnlag", en: "CAD and drawing data" },
     source: { cells: "G5:G19", label: "AUTOCAD" } },
+  { id: "tbc", name: "Trimble Business Center", group: "processing",
+    purpose: { no: "Monitorering", en: "Monitoring" },
+    source: { label: "Trimble Business Center", ref: "OWNER" } }, // not in workbook – added on the owner's instruction
+  { id: "infinity", name: "Leica Infinity", group: "processing",
+    purpose: { no: "Etterprosessering av punktskyer", en: "Point cloud post-processing" },
+    source: { label: "Leica Infinity", ref: "OWNER" } }, // not in workbook – added on the owner's instruction
   { id: "trimble", name: "Trimble Connect (Web)", group: "platform",
     purpose: { no: "Felles skybasert plattform for BIM og datautveksling (NORMA/OHLA-teamet, inkl. METROSTAV)",
       en: "Shared cloud-based platform for BIM and data exchange (NORMA/OHLA team, incl. METROSTAV)" },

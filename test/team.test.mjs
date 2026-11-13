@@ -75,7 +75,9 @@ test("no invented dates; every text is bilingual; every workbook item is traceab
     assert.ok(r.source?.cells && r.source?.label, `${r.id} source`);
   }
   for (const o of ORGANIZATIONS.filter(o => !o.internal)) assert.ok(o.source?.cells, o.id);
-  assert.deepEqual(TOOLS.map(t => t.source.label).sort(), ["AUTOCAD", "GISLINE", "Gemini", "TRIMBLE Connect Web"]);
+  assert.deepEqual(TOOLS.filter(t => t.source.cells).map(t => t.source.label).sort(), ["AUTOCAD", "GISLINE", "Gemini", "TRIMBLE Connect Web"]);
+  assert.deepEqual(TOOLS.filter(t => !t.source.cells).map(t => [t.id, t.source.ref]), [["tbc", "OWNER"], ["infinity", "OWNER"]]);
+  assert.ok(TOOLS.every(t => bilingual(t.purpose)));
   assert.deepEqual(TOOLS.filter(t => t.group === "platform").map(t => t.id), ["trimble"]);
   assert.ok(NOTES.every(bilingual));
 });

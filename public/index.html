@@ -373,7 +373,9 @@ const LANES = [
     seg:[{from:"2025-08-07",to:null,p:"p2", badge:"moved",
       note:{no:"Feltstikking flyttet fra Ressurs 2 til egen ressurs med rotasjonsordning 14/14.",en:"Field setting-out moved from Resource 2 to a dedicated resource on a 14/14 rotation."}}]},
   {res:"r3", duty:"panorama", name:{no:"Panorama 360",en:"Panorama 360"},
-    seg:[{from:"2025-08-07",to:null,p:"p2", badge:"new"}]},
+    seg:[{from:"2025-01-01",to:"2025-08-06",p:"p1", badge:"new", noCount:true,
+      note:{no:"Starter når droneflyging og fotogrammetri avsluttes. Telles ikke som egen ressurs før 07.08.2025.",en:"Starts when drone flights and photogrammetry end. Not counted as a separate resource before 07.08.2025."}},
+      {from:"2025-08-07",to:null,p:"p2"}]},
   {res:"sh", duty:"prosj", name:{no:"Prosjektering støtte",en:"Design support"},
     seg:[{from:"2024-08-01",to:null,p:"both"}]},
   {res:"sh", duty:"geo", name:{no:"Geometrisk monitorering",en:"Geometric monitoring"},
@@ -384,7 +386,8 @@ const EVENTS = [
   {d:"2024-08-01", t:{no:"Oppstart. Ressurs 1 (stikningsleder) og Ressurs 2 (mengdeberegning, drone og fotogrammetri).",en:"Start. Resource 1 (setting-out lead) and Resource 2 (quantity surveying, drone and photogrammetry)."}},
   {d:"2024-09-01", t:{no:"Ressurs 2 tar i tillegg rollen som feltstiker.",en:"Resource 2 additionally takes on the field surveyor role."}},
   {d:"2024-12-31", t:{no:"Droneflyging og fotogrammetri-prosessering avsluttes.",en:"Drone flights and photogrammetry processing end."}},
-  {d:"2025-08-07", t:{no:"Ny periode: Ressurs 3 innføres – feltstikkere i rotasjon 14/14 og 360° panorama. Ressurs 2 fokuserer på mengdeberegning.",en:"New period: Resource 3 introduced – field surveyors on a 14/14 rotation and 360° panoramas. Resource 2 focuses on quantity surveying."}},
+  {d:"2025-01-01", t:{no:"Panorama 360 starter og erstatter droneflyging og fotogrammetri.",en:"Panorama 360 starts, replacing drone flights and photogrammetry."}},
+  {d:"2025-08-07", t:{no:"Ny periode: Ressurs 3 innføres – feltstikkere i rotasjon 14/14; Panorama 360 videreføres under Ressurs 3. Ressurs 2 fokuserer på mengdeberegning.",en:"New period: Resource 3 introduced – field surveyors on a 14/14 rotation; Panorama 360 continues under Resource 3. Resource 2 focuses on quantity surveying."}},
   {d:"2026-11-09", t:{no:"I dag – Periode 2 pågår.",en:"Today – Period 2 ongoing."}}
 ];
 
@@ -527,7 +530,7 @@ function compactRole(x){
 
 function renderKpis(){
   const act = activeAt(cur);
-  const res = new Set(act.filter(x => x.l.res !== "sh").map(x => x.l.res));
+  const res = new Set(act.filter(x => x.l.res !== "sh" && !x.s.noCount).map(x => x.l.res));
   const roles = act.filter(x => x.l.res !== "sh").length;
   const duties = act.reduce((a, x) => a + DUTIES[x.l.duty].length, 0);
   const p = periodAt(cur);
@@ -565,7 +568,7 @@ function renderCompare(){
   const col = p => {
     const list = [];
     LANES.forEach(l => l.seg.forEach(s => { if (s.p === p.id || s.p === "both") list.push({l, s, ended: p.id==="p1" && s.to && D(s.to) < D(p.to)}); }));
-    const res = new Set(list.filter(x=>x.l.res!=="sh").map(x=>x.l.res)).size;
+    const res = new Set(list.filter(x=>x.l.res!=="sh" && !x.s.noCount).map(x=>x.l.res)).size;
     return `<div><h3><span class="pill ${p.id}">${p.label[lang]}</span> ${res} ${lang==="en"?"resources":"ressurser"}</h3>${groupByRes(list, true)}</div>`;
   };
   $("#cmp").innerHTML = PERIODS.map(col).join("");

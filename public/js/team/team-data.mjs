@@ -197,7 +197,7 @@ export const RELATIONSHIPS = [
 /** Software referenced in the workbook (F5:I19) – grouped by function. */
 export const TOOLS = [
   { id: "gisline", name: "GISLINE", group: "processing",
-    purpose: { no: "Fastpunktberegninger", en: "Fixed point calculations" },
+    purpose: { no: "Fastmerker beregning", en: "Fixed point calculations" },
     source: { cells: "F5:F19", label: "GISLINE" } },
   { id: "gemini", name: "Gemini", group: "processing",
     purpose: { no: "Landmålingsberegning og databehandling", en: "Survey calculations and data processing" },

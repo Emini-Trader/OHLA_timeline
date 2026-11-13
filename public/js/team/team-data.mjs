@@ -187,6 +187,11 @@ export const RELATIONSHIPS = [
     label: { no: "Midlertidig reserve", en: "Temporary backup" }, source: { ref: "RPT" } },
   { id: "backup-tunnel", from: "lead", to: "tunnel", type: "backup", status: "planned",
     label: { no: "Midlertidig reserve (tunnel)", en: "Temporary backup (tunnel)" }, source: { ref: "RPT" } },
+  { id: "backup-metrostav", from: "lead", to: "metrostav", type: "backup",
+    label: { no: "Reserve", en: "Backup" },
+    note: { no: "Reserveordning mellom NORMAs stikningsleder og METROSTAV. METROSTAV forblir en ekstern samarbeidspartner, ikke en NORMA-ressurs.",
+      en: "Backup arrangement between NORMA's Lead Surveyor and METROSTAV. METROSTAV remains an external collaborator, not a NORMA resource." },
+    source: { workbook: "not in workbook – added on the owner's instruction", ref: "OWNER" } },
 ];
 
 /** Software referenced in the workbook (F5:I19) – grouped by function. */
@@ -270,6 +275,8 @@ export const NOTES = [
     en: "“METROSTAV 100%” is kept as a source label but not shown as a NORMA resource; its contractual meaning is not stated." },
   { no: "En linje fra Trimble Connect ender ved forbindelsen SVV–kontor (rad 6). Det er ikke tolket som at SVV bruker plattformen.",
     en: "One line from Trimble Connect ends at the SVV–office connector (row 6). It is not interpreted as SVV using the platform." },
+  { no: "Reservelinjen mellom METROSTAV og stikningsleder finnes ikke i arbeidsboken; den er lagt til etter avklaring med eieren.",
+    en: "The backup line between METROSTAV and the Lead Surveyor is not in the workbook; it was added after clarification with the owner." },
   { no: "Kildene sier ikke hvilke tre programvaremiljøer som brukes i de uavhengige beregningene; de er derfor ikke navngitt.",
     en: "The sources do not state which three software environments are used for the independent calculations, so they are not named." },
 ];

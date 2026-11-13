@@ -34,7 +34,8 @@ test("METROSTAV is an external collaborator, not NORMA personnel", () => {
   assert.equal(m.source.label, "METROSTAV 100%"); // traceability kept
   assert.ok(!ROLES.some(r => r.id === "metrostav" || r.org === "metrostav"));
   const links = RELATIONSHIPS.filter(r => r.from === "metrostav" || r.to === "metrostav").map(r => r.type);
-  assert.ok(!links.includes("internal") && !links.includes("backup"));
+  assert.ok(!links.includes("internal"));
+  assert.ok(links.includes("backup"), "owner-requested backup link");
   assert.ok(links.includes("cooperation"));
 });
 
@@ -44,7 +45,8 @@ test("relationship semantics: no management lines to external parties", () => {
     assert.ok(ids.has(r.from) && ids.has(r.to), `${r.id} endpoints`);
     assert.ok(bilingual(r.label), `${r.id} label`);
     const external = [r.from, r.to].some(id => ORGANIZATIONS.find(o => o.id === id && !o.internal));
-    if (r.type === "internal" || r.type === "backup") assert.ok(!external, `${r.id} must stay inside NORMA`);
+    if (r.type === "internal") assert.ok(!external, `${r.id} must stay inside NORMA`);
+    if (r.type === "backup") assert.ok(!external || r.id === "backup-metrostav", `${r.id}: only the agreed METROSTAV backup crosses NORMA`);
   }
   const svv = RELATIONSHIPS.find(r => r.id === "svv-qs");
   assert.equal(svv.type, "communication");
@@ -54,7 +56,7 @@ test("relationship semantics: no management lines to external parties", () => {
 
 test("backup is temporary coverage from the Lead Surveyor only", () => {
   const backup = RELATIONSHIPS.filter(r => r.type === "backup");
-  assert.deepEqual(backup.map(r => r.to).sort(), ["field1", "field2", "tunnel"]);
+  assert.deepEqual(backup.map(r => r.to).sort(), ["field1", "field2", "metrostav", "tunnel"]);
   assert.ok(backup.every(r => r.from === "lead"));
   assert.ok(CONTINUITY.points.length >= 4 && CONTINUITY.points.every(bilingual));
 });

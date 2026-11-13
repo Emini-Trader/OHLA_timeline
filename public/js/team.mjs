@@ -24,7 +24,7 @@ const STR = {
       contract: "Byggherre – totalentreprenør (utenfor NORMA)", data: "Teknisk datautveksling",
       backup: "Midlertidig reserve ved fravær",
     },
-    shortLabels: { "ohla-lead": "Koordinering", "svv-qs": "Kommunikasjon", "lead-qs": "Intern", "lead-metrostav": "Referansenett", "ohla-svv": "Kontrakt" },
+    shortLabels: { "ohla-lead": "Koordinering", "svv-qs": "Kommunikasjon", "lead-qs": "Intern", "lead-metrostav": "Referansenett", "backup-metrostav": "Reserve", "ohla-svv": "Kontrakt" },
     reserve: "Reserve", norma: "NORMA GEOSYSTEMS · LANDMÅLING",
     trimbleBand: "Trimble Connect – felles skybasert plattform for BIM og datautveksling",
     trimbleSub: "NORMA/OHLA-teamet, inkl. METROSTAV",
@@ -63,7 +63,7 @@ const STR = {
       contract: "Client – main contractor (outside NORMA)", data: "Technical data exchange",
       backup: "Temporary backup during absence",
     },
-    shortLabels: { "ohla-lead": "Coordination", "svv-qs": "Communication", "lead-qs": "Internal", "lead-metrostav": "Ref. network", "ohla-svv": "Contract" },
+    shortLabels: { "ohla-lead": "Coordination", "svv-qs": "Communication", "lead-qs": "Internal", "lead-metrostav": "Ref. network", "backup-metrostav": "Backup", "ohla-svv": "Contract" },
     reserve: "Backup", norma: "NORMA GEOSYSTEMS · SURVEYING",
     trimbleBand: "Trimble Connect – shared cloud-based platform for BIM and data exchange",
     trimbleSub: "NORMA/OHLA team, incl. METROSTAV",
@@ -178,6 +178,7 @@ const PATH = {
   "svv-qs": "M930,78 V146",
   "lead-qs": "M620,189 H800",
   "lead-metrostav": "M340,189 H230",
+  "backup-metrostav": "M340,220 H230",
   "lead-field1": "M370,232 V297 H400",
   "lead-field2": "M370,297 V391 H400",
   "lead-tunnel": "M370,391 V485 H400",
@@ -194,7 +195,7 @@ const PATH = {
 };
 const LABEL_AT = {
   "ohla-svv": [710, 39], "ohla-lead": [488, 116, "start"], "svv-qs": [938, 116, "start"],
-  "lead-qs": [710, 181], "lead-metrostav": [285, 207],
+  "lead-qs": [710, 181], "lead-metrostav": [285, 181], "backup-metrostav": [285, 238],
 };
 
 function nodeSvg(id) {
